@@ -1,7 +1,8 @@
 /*
  * Create a list that holds all of your cards
  */
-
+const deck = document.getElementsByClassName("card");
+//console.log(deck);
 
 /*
  * Display the cards on the page
@@ -10,7 +11,7 @@
  *   - add each card's HTML to the page
  */
 
-// Shuffle function from http://stackoverflow.com/a/2450976
+ // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
     var currentIndex = array.length, temporaryValue, randomIndex;
 
