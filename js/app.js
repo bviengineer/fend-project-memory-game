@@ -3,7 +3,7 @@
  */
 
 const deck = document.getElementsByClassName("card");
-let openCards = []; //to hold cards that are flipped over
+let cardsOpened = [];
 
 /*
  * Display the cards on the page
@@ -27,17 +27,20 @@ function shuffle(deck) {
     return deck;
 }
 
-//displays symbol when card is selected 
+//displays symbol of card after its been selected 
 const showSymbol = function(event){
     event.target.className += " open show";
  }
 
+ //holds list of currently open cards
+ function mySelections(event){
+    event.target.style.border = "2px solid red";
+    console.log("the mySelections function is being called from the for loop - good job");
+ }
  
+
 for(let i = 0; i < deck.length; i++) {
-    deck[i].addEventListener("click", showSymbol);
-       
-    // openCards.push(deck[i]); // adds each card to the array
-    ;
+    deck[i].addEventListener("click", showSymbol, mySelections());   
 }
 
 
