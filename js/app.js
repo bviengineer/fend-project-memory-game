@@ -33,8 +33,14 @@ function shuffle(deck) {
 const showSymbol = function(event){
     event.target.className += " open show";
     cardClicked = event.target.childNodes[1].className;
-    cardsOpened.push(cardClicked);
-    console.log(cardsOpened);
+
+    if(cardsOpened.length < 2){
+        cardsOpened.push(cardClicked);
+        console.log(cardsOpened);
+    } else {
+        alert("there are two things in this array already, don't add anymore and compare what you have to see if they match - alright, carry on!");
+    }
+    
  }
  
 //for loop w/ click event listener
