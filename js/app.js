@@ -3,7 +3,9 @@
  */
 
 const deck = document.getElementsByClassName("card");
-let cardsOpened = [];
+let i; //var for for loop
+let cardClicked; //hold selected card
+let cardsOpened = []; //to hold more than one selected card 
 
 /*
  * Display the cards on the page
@@ -27,26 +29,17 @@ function shuffle(deck) {
     return deck;
 }
 
-//displays symbol of card after its been selected 
+//displays symbol of card after its been selected & pushes selection to an array
 const showSymbol = function(event){
     event.target.className += " open show";
- }
-
- //holds list of currently open cards
- function mySelections(event){
-    for(let i = 0; i < deck.length; i++) {
-        deck[i].addEventListener("click", function(){
-            let cardClicked = event.target;
-            cardsOpened.push(cardCliked);  
-        });
-    }
+    cardClicked = event.target.childNodes[1].className;
+    cardsOpened.push(cardClicked);
     console.log(cardsOpened);
  }
  
-
-for(let i = 0; i < deck.length; i++) {
-    deck[i].addEventListener("click", showSymbol)
-    mySelections();   
+//for loop w/ click event listener
+ for(i = 0; i < deck.length; i++) {
+    deck[i].addEventListener("click", showSymbol);      
 }
 
 
