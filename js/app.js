@@ -34,15 +34,20 @@ const showSymbol = function(event){
 
  //holds list of currently open cards
  function mySelections(event){
-    event.target.style.border = "2px solid red";
-    console.log("the mySelections function is being called from the for loop - good job");
+    for(let i = 0; i < deck.length; i++) {
+        deck[i].addEventListener("click", function(){
+            let cardClicked = event.target;
+            cardsOpened.push(cardCliked);  
+        });
+    }
+    console.log(cardsOpened);
  }
  
 
 for(let i = 0; i < deck.length; i++) {
-    deck[i].addEventListener("click", showSymbol, mySelections());   
+    deck[i].addEventListener("click", showSymbol)
+    mySelections();   
 }
-
 
 
 /*
