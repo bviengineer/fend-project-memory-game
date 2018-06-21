@@ -1,8 +1,9 @@
 /*
  * Create a list that holds all of your cards
  */
+
 const deck = document.getElementsByClassName("card");
-//console.log(deck);
+let openCards = []; //to hold cards that are flipped over
 
 /*
  * Display the cards on the page
@@ -11,20 +12,34 @@ const deck = document.getElementsByClassName("card");
  *   - add each card's HTML to the page
  */
 
+
  // Shuffle function from http://stackoverflow.com/a/2450976
-function shuffle(array) {
-    var currentIndex = array.length, temporaryValue, randomIndex;
+ //array was the var that once appeared where all appereances of deck exist in the shuffle function
+function shuffle(deck) {
+    var currentIndex = deck.length, temporaryValue, randomIndex;
 
     while (currentIndex !== 0) {
         randomIndex = Math.floor(Math.random() * currentIndex);
         currentIndex -= 1;
-        temporaryValue = array[currentIndex];
-        array[currentIndex] = array[randomIndex];
-        array[randomIndex] = temporaryValue;
+        temporaryValue = deck[currentIndex];
+        deck[currentIndex] = deck[randomIndex];
     }
-
-    return array;
+    return deck;
 }
+
+//displays symbol when card is selected 
+const showSymbol = function(event){
+    event.target.className += " open show";
+ }
+
+ 
+for(let i = 0; i < deck.length; i++) {
+    deck[i].addEventListener("click", showSymbol);
+       
+    // openCards.push(deck[i]); // adds each card to the array
+    ;
+}
+
 
 
 /*
