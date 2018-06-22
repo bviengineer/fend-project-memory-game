@@ -41,10 +41,20 @@ const showSymbol = function(event){
         cardsOpened.splice(2);
         event.target.classList.remove("open");
         event.target.classList.remove("show");
-        console.log(event.target); //testing purposes to be removed 
+        // console.log(event); //testing purposes to be removed 
     }
-    
- }
+
+    if(cardsOpened[0] === cardsOpened[1]){
+        console.log(cardsOpened[0] + " " + cardsOpened[1]);
+    } 
+    // else {
+    //     alert("your selections do not match try again");
+    //     cardsOpened[0] = event.target.classList.remove("open");
+    //     cardsOpened[0] = event.target.classList.remove("show");
+    //     cardsOpened[1] = event.target.classList.remove("open");
+    //     cardsOpened[1] = event.target.classList.remove("show");
+    // }
+}
  
 //for loop w/ click event listener
  for(i = 0; i < deck.length; i++) {
