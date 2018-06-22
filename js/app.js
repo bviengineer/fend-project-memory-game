@@ -29,16 +29,19 @@ function shuffle(deck) {
     return deck;
 }
 
-//displays symbol of card after its been selected & pushes selection to an array
+//displays symbol of card after its been selected & pushes up two selections to an array
 const showSymbol = function(event){
     event.target.className += " open show";
     cardClicked = event.target.childNodes[1].className;
 
     if(cardsOpened.length < 2){
         cardsOpened.push(cardClicked);
-        console.log(cardsOpened);
+        console.log(cardsOpened); //testing purposes to be removed later
     } else {
-        alert("there are two things in this array already, don't add anymore and compare what you have to see if they match - alright, carry on!");
+        cardsOpened.splice(2);
+        event.target.classList.remove("open");
+        event.target.classList.remove("show");
+        console.log(event.target); //testing purposes to be removed 
     }
     
  }
