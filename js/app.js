@@ -2,10 +2,14 @@
  * Create a list that holds all of your cards
  */
 
-const deck = document.getElementsByClassName("card");
-let i; //var for for loop
+const deckLIs = document.getElementsByClassName("card"); //deck of cards listed as <li>s
+const indexedCards = []; // used inside for loop to capture the index of each <li> in the deck of LIs (deckLIs)
+
+const deckIs = document.getElementsByClassName("fa");
 let cardClicked; //hold selected card
-let cardsOpened = []; //to hold more than one selected card 
+
+// const cardsOpened = []; //to hold more than one selected card 
+// const wrongMatch = []; //to hold cards that did not match
 
 /*
  * Display the cards on the page
@@ -29,37 +33,22 @@ function shuffle(deck) {
     return deck;
 }
 
-//displays symbol of card after its been selected & pushes up two selections to an array
-const showSymbol = function(event){
-    event.target.className += " open show";
-    cardClicked = event.target.childNodes[1].className;
-
-    if(cardsOpened.length < 2){
-        cardsOpened.push(cardClicked);
-        console.log(cardsOpened); //testing purposes to be removed later
-    } else {
-        cardsOpened.splice(2);
-        event.target.classList.remove("open");
-        event.target.classList.remove("show");
-        // console.log(event); //testing purposes to be removed 
+function loopDeck(){
+    for(let i = 0; i < deckLIs.length; i++) {
+        // console.log("card in deck: ", deckLIs[i]);
+        indexedCards.push(deckLIs[i]);
     }
+    return indexedCards;
+}   
 
-    if(cardsOpened[0] === cardsOpened[1]){
-        console.log(cardsOpened[0] + " " + cardsOpened[1]);
-    } 
-    // else {
-    //     alert("your selections do not match try again");
-    //     cardsOpened[0] = event.target.classList.remove("open");
-    //     cardsOpened[0] = event.target.classList.remove("show");
-    //     cardsOpened[1] = event.target.classList.remove("open");
-    //     cardsOpened[1] = event.target.classList.remove("show");
-    // }
-}
- 
-//for loop w/ click event listener
- for(i = 0; i < deck.length; i++) {
-    deck[i].addEventListener("click", showSymbol);      
-}
+loopDeck();
+console.log(indexedCards);
+
+
+//learned that attempting to console.log text + an object will print HTMLObject where the name of the object appears in the console.log statement as JS assumes that you are attempting to join the two data types together. Instead, use a , to print two different data types in a single console.log statement
+
+
+
 
 
 /*
