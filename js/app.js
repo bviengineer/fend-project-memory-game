@@ -96,6 +96,7 @@ function showCard(){
             function notAMatch(){
                 cardsOpened[0].classList = "card";
                 cardsOpened[1].classList = "card";
+                cardsOpened.splice(0);
             }
         });
     }
