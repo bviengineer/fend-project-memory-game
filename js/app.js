@@ -4,9 +4,10 @@
 
 const deckLIs = document.getElementsByClassName("card"); //deck of cards listed as <li>s (HTMLCollection)
 const indexedCards = []; // used inside for loop to capture the index of each <li> in the deck of LIs (deckLIs)
-const cardsOpened = []; //to hold the opened cards
+const cardsOpened = []; //to hold the opened cards'
 let clickCount = 0;
 let buttonClicked;
+
 
 // let cardClicked; //hold selected card
 /*
@@ -44,12 +45,16 @@ function loopDeck(){
 loopDeck();
 showCard();
 
+function resetClickCount(){
+    clickCount = 0;
+}
+
 
 //show & hide cards
 function showCard(){
     // console.log("inside of showCard function: " , indexedCards);
     
-    for(let i = 0; i < indexedCards.length; i++){
+    for(let i = 0; i < indexedCards.length; i++){        
         indexedCards[i].addEventListener("click", function(){
             clickCount += 1;
 
@@ -57,22 +62,28 @@ function showCard(){
 
             cardsOpened.push(buttonClicked);
 
-            console.log(buttonClicked, i);          
+            console.log(buttonClicked, i);
 
             if(cardsOpened.length < 2 && clickCount < 2){
+                cardsOpened[0].classList += " open show";
                 console.log("click count of ", clickCount, " is less than 2");
             
             } else if (cardsOpened.length === 2 && cardsOpened[0].childNodes[1].className === cardsOpened[1].childNodes[1].className){
+                cardsOpened[0].classList += " open show match";
+                cardsOpened[1].classList += " open show match";
                 console.log("you made a match");
                 console.log("click count of ", clickCount, " is = 2");
-                clickCount = 0;
+                resetClickCount();
                 cardsOpened.splice(0);
             
             } else if(cardsOpened.length === 2 && cardsOpened[0].childNodes[1].className !== cardsOpened[1].childNodes[1].className){
+                cardsOpened[0].classList += " open show";
+                cardsOpened[1].classList += " open show";
                 console.log("not a match");
                 console.log("click count of ", clickCount, " is = 2");
-                clickCount = 0;
-                cardsOpened.splice(0)
+                setTimeout(notAMatch, 3000);
+                resetClickCount();
+                // cardsOpened.splice(0)
             
             } //else if(cardsOpened.length > 2) {
             //     console.log("only match two cards at a time")
@@ -80,6 +91,12 @@ function showCard(){
             //     clickCount = 0;
             //     cardsOpened.splice(2);
             // } 
+
+            //resets unmatched cards
+            function notAMatch(){
+                cardsOpened[0].classList = "card";
+                cardsOpened[1].classList = "card";
+            }
         });
     }
 }
