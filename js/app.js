@@ -59,26 +59,27 @@ function showCard(){
 
             if(cardsOpened.length < 2 && clickCount < 2){
                 cardsOpened[0].classList += " open show";
-                console.log("click count ", clickCount, " of 2");
                 movesCount();
-
+                console.log("click count ", clickCount, " of 2");
+            
             } else if (cardsOpened.length === 2 && cardsOpened[0].childNodes[1].className === cardsOpened[1].childNodes[1].className){
                 openCards();
-                myCardMatches();                   
+                myCardMatches();                  
                 setTimeout(aMatch, 1000);                
                 pointsEarned();
                 movesCount();
-                console.log(myCardMatches);
-                console.log("you made a match");
+                setTimeout(gameOver, 2000);
+                console.log("These are the classes for the cards I've matched, so far:", myMatches);
+                console.log("you made a match");movesCount();
                 console.log("click count ", clickCount, " of ", clickCount);
 
             } else if(cardsOpened.length === 2 && cardsOpened[0].childNodes[1].className !== cardsOpened[1].childNodes[1].className){
                 openCards();
                 setTimeout(notAMatch, 3000);
+                movesCount();
                 console.log("not a match");
-                console.log("click count ", clickCount, " of ", clickCount);
-                movesCount();           
-            }            
+                console.log("click count ", clickCount, " of ", clickCount);                       
+            }        
         });
     }
 }
@@ -113,7 +114,8 @@ function aMatch(){
 
 //card matches
 function myCardMatches(){
-    myMatches.push(cardsOpened);
+    myMatches.push(cardsOpened[0]);
+    myMatches.push(cardsOpened[1]);
 }
 
 //resets unmatched cards
@@ -127,12 +129,19 @@ function notAMatch(){
 }
 
 function pointsEarned(){
-    playerPoints += 1;
+    playerPoints += 2;
 }
 
 function movesCount(){
     playerMovesCount += 1;
     playerMoves.innerHTML = playerMovesCount;
+}
+
+function gameOver(){
+    if(myMatches.length === 16){
+        pointsEarned();
+        console.log("Great job! \n Your points are: ", playerPoints);
+    }
 }
 
 /*
