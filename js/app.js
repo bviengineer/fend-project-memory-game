@@ -1,13 +1,16 @@
 /*
  * Create a list that holds all of your cards
  */
-
 const deckLIs = document.getElementsByClassName("card"); //deck of cards listed as <li>s (HTMLCollection)
 const indexedCards = []; // used inside for loop to capture the index of each <li> in the deck of LIs (deckLIs)
 const cardsOpened = []; //to hold the opened cards'
-let clickCount = 0;
-let buttonClicked;
+const myMatches = []; //to hold the cards that have been matched;
 
+let playerMoves = document.querySelector(".moves");
+let playerMovesCount = 0; //the amount of clicks the player makes regardless of a match
+let clickCount = 0; //keeps track of the amount of clicks before matching the cards
+let playerPoints = 0; //keeps track of players points
+let buttonClicked;
 
 // let cardClicked; //hold selected card
 /*
@@ -31,76 +34,107 @@ function shuffle(deck) {
     return deck;
 }
 
-//Loops through deck of HTMLCollections and places each itme in an array
+loopDeck();
+showCard();
+
+//Loops through deck of HTMLCollections and places each item in an array
 function loopDeck(){
     for(let i = 0; i < deckLIs.length; i++) {
-        // deckLIs[i].addEventListener("click", function(event){
-        //     console.log(event.target);
-        // });
         indexedCards.push(deckLIs[i]); //turns collection into an array
     }
     return indexedCards;
 }  
 
-loopDeck();
-showCard();
-
-function resetClickCount(){
-    clickCount = 0;
-}
-
-
 //show & hide cards
-function showCard(){
-    // console.log("inside of showCard function: " , indexedCards);
-    
+function showCard(){    
     for(let i = 0; i < indexedCards.length; i++){        
         indexedCards[i].addEventListener("click", function(){
             clickCount += 1;
 
             buttonClicked = indexedCards[i];     
 
-            cardsOpened.push(buttonClicked);
+            cardsOpened.push(buttonClicked); //pushes initial card to cardsOpened array
 
             console.log(buttonClicked, i);
 
             if(cardsOpened.length < 2 && clickCount < 2){
                 cardsOpened[0].classList += " open show";
-                console.log("click count of ", clickCount, " is less than 2");
-            
-            } else if (cardsOpened.length === 2 && cardsOpened[0].childNodes[1].className === cardsOpened[1].childNodes[1].className){
-                cardsOpened[0].classList += " open show match";
-                cardsOpened[1].classList += " open show match";
-                console.log("you made a match");
-                console.log("click count of ", clickCount, " is = 2");
-                resetClickCount();
-                cardsOpened.splice(0);
-            
-            } else if(cardsOpened.length === 2 && cardsOpened[0].childNodes[1].className !== cardsOpened[1].childNodes[1].className){
-                cardsOpened[0].classList += " open show";
-                cardsOpened[1].classList += " open show";
-                console.log("not a match");
-                console.log("click count of ", clickCount, " is = 2");
-                setTimeout(notAMatch, 3000);
-                resetClickCount();
-                // cardsOpened.splice(0)
-            
-            } //else if(cardsOpened.length > 2) {
-            //     console.log("only match two cards at a time")
-            //     console.log("click count of ", clickCount, " is > 2");
-            //     clickCount = 0;
-            //     cardsOpened.splice(2);
-            // } 
+                console.log("click count ", clickCount, " of 2");
+                movesCount();
 
-            //resets unmatched cards
-            function notAMatch(){
-                cardsOpened[0].classList = "card";
-                cardsOpened[1].classList = "card";
-                cardsOpened.splice(0);
-            }
+            } else if (cardsOpened.length === 2 && cardsOpened[0].childNodes[1].className === cardsOpened[1].childNodes[1].className){
+                openCards();
+                myCardMatches();                   
+                aMatch();                
+                pointsEarned();
+                movesCount();
+                console.log(myCardMatches);
+                console.log("you made a match");
+                console.log("click count ", clickCount, " of ", clickCount);
+
+            } else if(cardsOpened.length === 2 && cardsOpened[0].childNodes[1].className !== cardsOpened[1].childNodes[1].className){
+                openCards();
+                setTimeout(notAMatch, 3000);
+                console.log("not a match");
+                console.log("click count ", clickCount, " of ", clickCount);
+                movesCount();           
+            }            
         });
     }
 }
+ 
+//resets click counter
+ function resetClickCount(){
+    clickCount = 0;
+}
+
+//clears array that holds cards to be compared for a match
+function clearArray() {
+    cardsOpened.splice(0);
+}
+
+//shows cards selected
+function openCards(){
+    cardsOpened[0].classList = "";
+    cardsOpened[1].classList = "";
+    cardsOpened[0].classList += "card open show";
+    cardsOpened[1].classList += "card open show";
+}
+
+//Cards selections match
+function aMatch(){
+    cardsOpened[0].classList = "";
+    cardsOpened[1].classList = "";
+    cardsOpened[0].classList += "card open show match";
+    cardsOpened[1].classList += "card open show match";
+    resetClickCount();
+    clearArray();
+}
+
+//card matches
+function myCardMatches(){
+    myMatches.push(cardsOpened);
+}
+
+//resets unmatched cards
+function notAMatch(){
+    cardsOpened[0].classList = "";
+    cardsOpened[1].classList = "";
+    cardsOpened[0].classList = "card";
+    cardsOpened[1].classList = "card";
+    resetClickCount();
+    clearArray();
+}
+
+function pointsEarned(){
+    playerPoints += 1;
+}
+
+function movesCount(){
+    playerMovesCount += 1;
+    playerMoves.innerHTML = playerMovesCount;
+}
+
 /*
  * set up the event listener for a card. If a card is clicked:
  *  - display the card's symbol (put this functionality in another function that you call from this one)
@@ -115,7 +149,7 @@ function showCard(){
  
  /*
  BUGS
- 1. cards are only being comparted for a match on the third click
+ 1. if card is already open & the same card is clicked again, it's registere as a click and compared to the card already in the array
  */
  
  /* 
