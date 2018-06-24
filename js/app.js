@@ -65,7 +65,7 @@ function showCard(){
             } else if (cardsOpened.length === 2 && cardsOpened[0].childNodes[1].className === cardsOpened[1].childNodes[1].className){
                 openCards();
                 myCardMatches();                   
-                aMatch();                
+                setTimeout(aMatch, 1000);                
                 pointsEarned();
                 movesCount();
                 console.log(myCardMatches);
