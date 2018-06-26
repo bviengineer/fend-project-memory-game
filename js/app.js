@@ -12,8 +12,8 @@ let buttonClicked; //used in 2nd for loop to hold the click event for the cards
 
 //Nodes
 let playerMoves = document.querySelector(".moves"); 
-let modal = document.getElementById("modal");
-let closeModal = document.getElementById("close-window");
+let modal = document.getElementById("modal-container");
+let closeModal = document.getElementById("close-window-text");
 let modalContent = document.getElementById("modal-content");
 let scoreStars = document.getElementsByClassName("fa fa-star");
 let shuffleDeck = document.getElementsByClassName("restart");
@@ -83,7 +83,7 @@ function showCard(){
 
             } else if(cardsOpened.length === 2 && cardsOpened[0].childNodes[1].className !== cardsOpened[1].childNodes[1].className){
                 openCards();
-                setTimeout(notAMatch, 700);
+                setTimeout(notAMatch, 800);
                 movesCount();
                 console.log("not a match"); //testing purposes
                 console.log("click count ", clickCount, " of ", clickCount) //testing purposes;                       
