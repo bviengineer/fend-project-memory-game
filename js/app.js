@@ -65,8 +65,9 @@ function showCard(){
         
             cardsOpened.push(buttonClicked); //pushes initial card to cardsOpened array
 
-            clickCount += 1;           
-            
+            clickCount += 1;
+                      
+            //may not need the clickCounter
             if(cardsOpened.length < 2 && clickCount < 2){
                 cardsOpened[0].classList += " open show";
                             
@@ -83,6 +84,7 @@ function showCard(){
 
             } else if(cardsOpened.length === 2 && cardsOpened[0].childNodes[1].className !== cardsOpened[1].childNodes[1].className){
                 openCards();
+                colorChange();
                 setTimeout(notAMatch, 800);
                 movesCount();
                 console.log("not a match"); //testing purposes
@@ -96,6 +98,12 @@ function showCard(){
  function resetClickCount(){
     clickCount = 0;
 }
+
+//resets classList on LIs
+// function clearClassList(){
+//     cardsOpened[0].classList = "";
+//     cardsOpened[1].classList = ""; 
+// }
 
 //clears array that holds cards to be compared for a match
 function clearArray() {
@@ -115,7 +123,7 @@ function clearArray() {
    }
 }
 
-//shows cards selected
+//show cards selected
 function openCards(){
     cardsOpened[0].classList = "";
     cardsOpened[1].classList = "";
@@ -123,13 +131,14 @@ function openCards(){
     cardsOpened[1].classList += "card open show";
 }
 
-//Cards selections match
+//Card selections match
 function aMatch(){
     cardsOpened[0].classList = "";
     cardsOpened[1].classList = "";
     cardsOpened[0].classList += "card open show match";
     cardsOpened[1].classList += "card open show match";
-    resetClickCount();
+    cardsOpened[0].classList = "";
+    cardsOpened[1].classList = "";
     clearArray();
 }
 
@@ -139,12 +148,20 @@ function myCardMatches(){
     myMatches.push(cardsOpened[1]);
 }
 
+//wrong match color change
+function colorChange(){
+    cardsOpened[0].classList = "";
+    cardsOpened[1].classList = "";
+    cardsOpened[0].classList += "card open show wrongMatch";
+    cardsOpened[1].classList += "card open show wrongMatch";
+}
+
 //resets unmatched cards
 function notAMatch(){
     cardsOpened[0].classList = "";
     cardsOpened[1].classList = "";
-    cardsOpened[0].classList = "card";
-    cardsOpened[1].classList = "card";
+    cardsOpened[0].classList += "card";
+    cardsOpened[1].classList += "card";
     resetClickCount();
     clearArray();
 }
@@ -187,7 +204,6 @@ function displayModal(){
     modalContent.innerHTML +="<p>Great job! <br> Points earned:  <strong>" + playerPoints+ "</strong></p> <p>You made:  <strong>" + playerMovesCount + "</strong> moves</p>" ;
     modal.style.display = "inline";
 }
-
 
 //My logic endds here
 /* UDACITY'S NOTES

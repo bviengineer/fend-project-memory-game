@@ -80,8 +80,8 @@ h1 {
     font-size: 33px;
 }
 
-.not-a-match {
-    background-color: darkred;
+.wrongMatch {
+    background-color: #8b0000!important;
 }
 
 /*
@@ -112,7 +112,7 @@ h1 {
 }
 
 /* 
-* Styles for the Modal Panel
+* Styles for the Results Modal
 */
 
 #modal-container{
