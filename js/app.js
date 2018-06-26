@@ -179,7 +179,7 @@ closeModal.addEventListener("click", function(){
 
 //displays modal with results
 function displayModal(){
-    modalContent.innerHTML +="<p>Great job! <br> Points earned:  <strong>" + playerPoints+ "</strong>gi</p> <p>You made:  <strong>" + playerMovesCount + "</strong> moves</p>" ;
+    modalContent.innerHTML +="<p>Great job! <br> Points earned:  <strong>" + playerPoints+ "</strong></p> <p>You made:  <strong>" + playerMovesCount + "</strong> moves</p>" ;
     modal.style.display = "inline";
 }
 
