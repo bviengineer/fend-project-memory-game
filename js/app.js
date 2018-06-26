@@ -1,25 +1,32 @@
-/*
- * Create a list that holds all of your cards
- */
+//Collections & Arrays
 const deckLIs = document.getElementsByClassName("card"); //deck of cards listed as <li>s (HTMLCollection)
-const indexedCards = []; // used inside for loop to capture the index of each <li> in the deck of LIs (deckLIs)
+const indexedCards = []; // used inside 1st for loop to capture the index of each <li> in the deck of LIs (deckLIs)
 const cardsOpened = []; //to hold the opened cards'
 const myMatches = []; //to hold the cards that have been matched;
 
-let playerMoves = document.querySelector(".moves");
+//Trackers
 let playerMovesCount = 0; //the amount of clicks the player makes regardless of a match
-let clickCount = 0; //keeps track of the amount of clicks before matching the cards
 let playerPoints = 0; //keeps track of players points
-let buttonClicked;
+let clickCount = 0; //keeps track of the amount of clicks before matching the cards
+let buttonClicked; //used in 2nd for loop to hold the click event for the cards
 
-// let cardClicked; //hold selected card
-/*
+//Nodes
+let playerMoves = document.querySelector(".moves"); 
+let modal = document.getElementById("modal");
+let closeModal = document.getElementById("close-window");
+let modalContent = document.getElementById("modal-content");
+let scoreStars = document.getElementsByClassName("fa fa-star");
+
+console.log(scoreStars[0], scoreStars[1], scoreStars[2]);
+
+/*UDACITY'S NOTES
  * Display the cards on the page
  *   - shuffle the list of cards using the provided "shuffle" method below
  *   - loop through each card and create its HTML
  *   - add each card's HTML to the page
  */
 
+ //UDACITY'S NOTES
 // Shuffle function from http://stackoverflow.com/a/2450976
  //array was the var that once appeared where all appereances of deck exist in the shuffle function
 function shuffle(deck) {
@@ -33,7 +40,7 @@ function shuffle(deck) {
     }
     return deck;
 }
-
+//MY Logic begins here
 loopDeck();
 showCard();
 
@@ -49,36 +56,32 @@ function loopDeck(){
 function showCard(){    
     for(let i = 0; i < indexedCards.length; i++){        
         indexedCards[i].addEventListener("click", function(){
-            clickCount += 1;
-
-            buttonClicked = indexedCards[i];     
-
+            buttonClicked = indexedCards[i]; 
+        
             cardsOpened.push(buttonClicked); //pushes initial card to cardsOpened array
 
-            console.log(buttonClicked, i);
-
+            clickCount += 1;           
+            
             if(cardsOpened.length < 2 && clickCount < 2){
                 cardsOpened[0].classList += " open show";
-                movesCount();
-                console.log("click count ", clickCount, " of 2");
-            
+                            
             } else if (cardsOpened.length === 2 && cardsOpened[0].childNodes[1].className === cardsOpened[1].childNodes[1].className){
                 openCards();
                 myCardMatches();                  
-                setTimeout(aMatch, 1000);                
+                setTimeout(aMatch, 500);
                 pointsEarned();
                 movesCount();
-                setTimeout(gameOver, 2000);
+                setTimeout(gameOver, 700);
                 console.log("These are the classes for the cards I've matched, so far:", myMatches);
-                console.log("you made a match");movesCount();
-                console.log("click count ", clickCount, " of ", clickCount);
+                console.log("you made a match");movesCount(); //testing purposes
+                console.log("click count ", clickCount, " of ", clickCount); //testing purposes
 
             } else if(cardsOpened.length === 2 && cardsOpened[0].childNodes[1].className !== cardsOpened[1].childNodes[1].className){
                 openCards();
-                setTimeout(notAMatch, 3000);
+                setTimeout(notAMatch, 700);
                 movesCount();
-                console.log("not a match");
-                console.log("click count ", clickCount, " of ", clickCount);                       
+                console.log("not a match"); //testing purposes
+                console.log("click count ", clickCount, " of ", clickCount) //testing purposes;                       
             }        
         });
     }
@@ -92,6 +95,19 @@ function showCard(){
 //clears array that holds cards to be compared for a match
 function clearArray() {
     cardsOpened.splice(0);
+}
+
+ //checks for duplicate clicks
+ function duplicateClicks(){
+    if(cardsOpened.length > 1 && buttonClicked.childNodes[1] === cardsOpened[0].childNodes[1]){
+       console.log("you clicked on that card already, please try anohter"); //for testing
+       console.log(buttonClicked.childNodes[1]);
+       cardsOpened.shift();
+        clickCount = 1;
+    } else if(cardsOpened.length > 1 && buttonClicked.childNodes[1] === cardsOpened[1].childNodes[1]){
+       cardsOpened.pop();
+       clickCount = 1;
+   }
 }
 
 //shows cards selected
@@ -128,23 +144,48 @@ function notAMatch(){
     clearArray();
 }
 
+//player points
 function pointsEarned(){
     playerPoints += 2;
+    if(playerPoints > 2 && playerPoints <= 7){
+        scoreStars[0].style.color = "yellow";
+    } else if(playerPoints > 8 && playerPoints <= 12){
+        scoreStars[0].style.color = "yellow";
+        scoreStars[1].style.color = "blue";
+    } else if(playerPoints === 16){
+        scoreStars[0].style.color = "yellow";
+        scoreStars[1].style.color = "blue";
+        scoreStars[2].style.color = "green";
+    }
 }
 
+//number of moves player makes 
 function movesCount(){
     playerMovesCount += 1;
     playerMoves.innerHTML = playerMovesCount;
 }
 
+//all matches successful
 function gameOver(){
     if(myMatches.length === 16){
-        pointsEarned();
-        console.log("Great job! \n Your points are: ", playerPoints);
-    }
+       displayModal();    
+    }   
 }
 
-/*
+//closes modal
+closeModal.addEventListener("click", function(){
+    modal.style.display = "none";    
+});
+
+//displays modal with results
+function displayModal(){
+    modalContent.innerHTML +="<p>Great job! <br> Points earned:  <strong>" + playerPoints+ "</strong></p> <p>You made:  <strong>" + playerMovesCount + "</strong> moves</p>" ;
+    modal.style.display = "inline";
+}
+
+
+//My logic endds here
+/* UDACITY'S NOTES
  * set up the event listener for a card. If a card is clicked:
  *  - display the card's symbol (put this functionality in another function that you call from this one)
  *  - add the card to a *list* of "open" cards (put this functionality in another function that you call from this one)
@@ -156,12 +197,12 @@ function gameOver(){
  */
 
  
- /*
+ /*My Observations
  BUGS
  1. if card is already open & the same card is clicked again, it's registere as a click and compared to the card already in the array
  */
  
- /* 
+ /* My Lessons
 LESSONS LEARNED
 1. learned that attempting to console.log text + an object will print HTMLObject where the name of the object appears in the console.log statement as JS assumes that you are attempting to join the two data types together. Instead, use a , to print two different data types in a single console.log statement
 

@@ -107,3 +107,48 @@ h1 {
     float: right;
     cursor: pointer;
 }
+
+/* 
+* Styles for the Modal Panel
+*/
+
+#modal {
+    display: none;
+    height: 400px;
+    width: 500px;
+    margin-left: 430px;
+    margin-top: -700px;
+    padding: 20px;
+    background-color: azure;
+    position: fixed;
+    z-index: 10;
+    opacity: 0.9;
+    border-radius: 10px;
+}
+
+#modal-header h1 {
+    text-align: center;
+    display: inline-block;
+}
+
+ #close-window {
+    display: inline-block;
+    float: right;
+    color: black;
+    font-size: 25px;
+}
+#close-window:hover {
+   cursor: hand;
+   color: red;
+   cursor: pointer;
+}
+
+#modal-content {
+    font-size: 20px;
+    background-color: gainsboro;
+    height: 230px;
+    padding: 50px 0 0 50px;    
+    border-radius: 10px;
+}
+
+ 
