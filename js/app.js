@@ -72,12 +72,12 @@ function showCard(){
                 cardsOpened[0].classList += " open show";
                             
             } else if (cardsOpened.length === 2 && cardsOpened[0].childNodes[1].className === cardsOpened[1].childNodes[1].className){
-                openCards();
-                myCardMatches();                  
-                setTimeout(aMatch, 500);
+                openCards();                  
+                myCardMatches();
+                setTimeout(aMatch, 500);                
                 pointsEarned();
                 movesCount();
-                setTimeout(gameOver, 700);
+                setTimeout(gameOver, 600);
                 console.log("These are the classes for the cards I've matched, so far:", myMatches);
                 console.log("you made a match");movesCount(); //testing purposes
                 console.log("click count ", clickCount, " of ", clickCount); //testing purposes
@@ -137,8 +137,6 @@ function aMatch(){
     cardsOpened[1].classList = "";
     cardsOpened[0].classList += "card open show match";
     cardsOpened[1].classList += "card open show match";
-    cardsOpened[0].classList = "";
-    cardsOpened[1].classList = "";
     clearArray();
 }
 
@@ -221,6 +219,7 @@ function displayModal(){
  /*My Observations
  BUGS
  1. if card is already open & the same card is clicked again, it's registere as a click and compared to the card already in the array
+ 2. Since implementing the color change for incorrect matches, there's a delay after clicking card either a correct after a match or incorrect match
  */
  
  /* My Lessons
