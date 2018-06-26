@@ -16,8 +16,7 @@ let modal = document.getElementById("modal");
 let closeModal = document.getElementById("close-window");
 let modalContent = document.getElementById("modal-content");
 let scoreStars = document.getElementsByClassName("fa fa-star");
-
-console.log(scoreStars[0], scoreStars[1], scoreStars[2]);
+let shuffleDeck = document.getElementsByClassName("restart");
 
 /*UDACITY'S NOTES
  * Display the cards on the page
@@ -29,20 +28,26 @@ console.log(scoreStars[0], scoreStars[1], scoreStars[2]);
  //UDACITY'S NOTES
 // Shuffle function from http://stackoverflow.com/a/2450976
  //array was the var that once appeared where all appereances of deck exist in the shuffle function
-function shuffle(deck) {
-    var currentIndex = deck.length, temporaryValue, randomIndex;
+ function shuffle(indexedCards) {
+    var currentIndex = indexedCards.length, temporaryValue, randomIndex;
 
     while (currentIndex !== 0) {
         randomIndex = Math.floor(Math.random() * currentIndex);
         currentIndex -= 1;
-        temporaryValue = deck[currentIndex];
-        deck[currentIndex] = deck[randomIndex];
+        temporaryValue = indexedCards[currentIndex];
+        indexedCards[currentIndex] = indexedCards[randomIndex];
     }
-    return deck;
+    return indexedCards;
 }
+
 //MY Logic begins here
 loopDeck();
 showCard();
+
+//shuffles deck if shuff button is clicked
+// shuffleDeck.addEventListener("click", function(){
+//     shuffle();
+// });
 
 //Loops through deck of HTMLCollections and places each item in an array
 function loopDeck(){
