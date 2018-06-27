@@ -111,10 +111,14 @@ h1 {
     cursor: pointer;
 }
 
+.fa-star {
+    color: #ffff00;
+    display: inline;
+}
+
 /* 
 * Styles for the Results Modal
 */
-
 #modal-container{
     position: fixed;
     z-index: 10;

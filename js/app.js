@@ -18,6 +18,10 @@ let modalContent = document.getElementById("modal-content");
 let scoreStars = document.getElementsByClassName("fa fa-star");
 let restartGameButton = document.getElementById("restart");
 let playAgainButton = document.createElement("button");//for restaring game from modal
+let gameTimerHrs = document.getElementById("hrs");
+let gameTimerMins = document.getElementById("mins");
+let gameTimerSecs = document.getElementById("secs");
+let startGameButon = document.getElementById("start-timer");
 
 /*UDACITY'S NOTES
  * Display the cards on the page
@@ -114,10 +118,15 @@ function aMatch(){
     clearArray();
 }
 
-//card matches
+//arry of all card matches/pairs
 function myCardMatches(){
     myMatches.push(cardsOpened[0]);
     myMatches.push(cardsOpened[1]);
+}   
+
+//resets array with matched cards
+function resetMyCardMatches(){
+    myMatches.splice(0);
 }
 
 //wrong match color change
@@ -140,16 +149,36 @@ function notAMatch(){
 //player points
 function pointsEarned(){
     playerPoints += 2;
-    if(playerPoints > 3 && playerPoints <= 7){
+    if(playerPoints > 12 && playerPoints <= 16){
         scoreStars[0].style.color = "yellow";
-    } else if(playerPoints >= 8 && playerPoints <= 12){
+        scoreStars[1].style.display = "none";
+        scoreStars[2].style.display = "none";
+    } else if(playerPoints > 8 && playerPoints <= 12){
+        scoreStars[0].style.display = "yellow";
+        scoreStars[1].style.color = "yellow";
+        scoreStars[2].style.display = "none";
+    } else if(playerPoints === 0){
         scoreStars[0].style.color = "yellow";
-        scoreStars[1].style.color = "blue";
-    } else if(playerPoints === 16){
-        scoreStars[0].style.color = "yellow";
-        scoreStars[1].style.color = "blue";
-        scoreStars[2].style.color = "green";
+        scoreStars[1].style.color = "yellow";
+        scoreStars[2].style.color = "yellow";
     }
+}
+
+// //reset starRating
+// function resetStarRating(){
+//     scoreStars[0].style.display = "";
+//     scoreStars[1].style.display = "";
+//     scoreStars[2].style.display = "";
+//     scoreStars[0].style.display = "inline";
+//     scoreStars[1].style.display = "inline";
+//     scoreStars[2].style.display = "inline";
+//     console.log(storeStars[0]);
+
+// }
+
+//resets playerPoints
+function resetPointsEarned(){
+    playerPoints = 0;
 }
 
 //number of moves player makes 
@@ -187,13 +216,13 @@ function displayModal(){
     playAgainButton.style.backgroundColor = "cadetblue";
     playAgainButton.style.fontSize = "1em";
     playAgainButton.style.color = "white";
-    modalContent.appendChild(playAgainBtn);   
+    modalContent.appendChild(playAgainButton);   
 
     closeModal.style.display = "none";//hides close window text on modal since modal will be closed by play again buttonHide
 
     /*TO DO:
-    Display time took to complete game
-    star rating */
+    -Display time took to complete game
+    -star rating */
 }
 
 //duplicate card selections notification
@@ -210,6 +239,9 @@ playAgainButton.addEventListener("click", function(){
     resetStarRating();
     resetMovesCount();  
     resetGameBoard();
+    resetMyCardMatches();
+    resetPointsEarned();
+    resetStarRating();
 });
 
 //event listener reset game board, timer & star rating
@@ -218,6 +250,9 @@ restartGameButton.addEventListener("click", function(){
     resetStarRating();
     resetMovesCount();    
     resetGameBoard();
+    resetMyCardMatches();
+    resetPointsEarned();
+    resetStarRating();
 });
 
 //resets game board
@@ -231,10 +266,19 @@ function resetGameBoard(){
 //restart star rating
 function resetStarRating(){
     for(let i = 0; i < scoreStars.length; i++){
-        scoreStars[i].style.color = "";
+        scoreStars[i].style.display = "inline";
     }
 }
 
+//game timer
+function startGame(){
+    if(gameTimerSecs.value === 0 && myMatches.length < 16){
+        gameTimerSecs += 1;
+        gameTimerSecs.value = gameTimerSecs;
+        console.log(gameTimerSecs.value);
+    }
+}
+startGame();
 //My logic endds here
 
 /* UDACITY'S NOTES
