@@ -9,7 +9,6 @@ let playerMovesCount = 0; //the amount of clicks the player makes regardless of 
 let playerPoints = 0; //keeps track of players points
 let clickCount = 0; //keeps track of the amount of clicks before matching the cards
 let buttonClicked; //used in 2nd for loop to hold the click event for the cards
-let playAgainBtn = document.createElement("button");//for restaring game from modal
 
 //Nodes
 let playerMoves = document.querySelector(".moves"); 
@@ -17,7 +16,8 @@ let modal = document.getElementById("modal-container");
 let closeModal = document.getElementById("close-window-text");
 let modalContent = document.getElementById("modal-content");
 let scoreStars = document.getElementsByClassName("fa fa-star");
-let shuffleDeck = document.getElementsByClassName("restart");
+let restartGameButton = document.getElementById("restart");
+let playAgainButton = document.createElement("button");//for restaring game from modal
 
 /*UDACITY'S NOTES
  * Display the cards on the page
@@ -158,6 +158,12 @@ function movesCount(){
     playerMoves.innerHTML = playerMovesCount;
 }
 
+//resets player moves
+function resetMovesCount(){
+    playerMovesCount = 0;
+    playerMoves.innerHTML = playerMovesCount;
+}
+
 //all matches successful
 function gameOver(){
     if(myMatches.length === 16){
@@ -176,15 +182,18 @@ function displayModal(){
    
     modalContent.innerHTML ="<p>Great job! <br> Points earned:  <strong>" + playerPoints + "</strong></p> <p>You made:  <strong>" + playerMovesCount + "</strong> moves</p>";
     
-    //creates & styles button to restart game from modal
-    // playAgainBtn = document.createElement("button");   
-    playAgainBtn.innerHTML = "<strong>Play Again</strong>";
-    playAgainBtn.style.backgroundColor = "cadetblue";
-    playAgainBtn.style.fontSize = "1em";
-    playAgainBtn.style.color = "white";
+    //creates & styles button to restart game from modal  
+    playAgainButton.innerHTML = "<strong>Play Again</strong>";
+    playAgainButton.style.backgroundColor = "cadetblue";
+    playAgainButton.style.fontSize = "1em";
+    playAgainButton.style.color = "white";
     modalContent.appendChild(playAgainBtn);   
 
-    closeModal.style.display = "none";//hides close window text on modal since modal will be closed by play again button
+    closeModal.style.display = "none";//hides close window text on modal since modal will be closed by play again buttonHide
+
+    /*TO DO:
+    Display time took to complete game
+    star rating */
 }
 
 //duplicate card selections notification
@@ -195,13 +204,39 @@ function invalidMove(){
 }
 
 //restart game from modal
-playAgainBtn.addEventListener("click", function(){
+playAgainButton.addEventListener("click", function(){
     modal.style.display = "none";
-    //restart game timer  
-    //reset game board 
+    //restart game timer
+    resetStarRating();
+    resetMovesCount();  
+    resetGameBoard();
 });
 
+//event listener reset game board, timer & star rating
+restartGameButton.addEventListener("click", function(){
+    //restarts game timer
+    resetStarRating();
+    resetMovesCount();    
+    resetGameBoard();
+});
+
+//resets game board
+function resetGameBoard(){
+    for(let i = 0; i < indexedCards.length; i++){
+        indexedCards[i].className = "";
+        indexedCards[i].className = "card";
+    }
+}
+
+//restart star rating
+function resetStarRating(){
+    for(let i = 0; i < scoreStars.length; i++){
+        scoreStars[i].style.color = "";
+    }
+}
+
 //My logic endds here
+
 /* UDACITY'S NOTES
  * set up the event listener for a card. If a card is clicked:
  *  - display the card's symbol (put this functionality in another function that you call from this one)
@@ -216,13 +251,6 @@ playAgainBtn.addEventListener("click", function(){
  
  /*My Observations
  BUGS
- 1. if card is already open & the same card is clicked again, it's registere as a click and compared to the card already in the array
- 2. Since implementing the color change for incorrect matches, there's a delay after clicking card either a correct after a match or incorrect match
+NONE at this time  
  */
- 
- /* My Lessons
-LESSONS LEARNED
-1. learned that attempting to console.log text + an object will print HTMLObject where the name of the object appears in the console.log statement as JS assumes that you are attempting to join the two data types together. Instead, use a , to print two different data types in a single console.log statement
 
-2.You cannot add an event listener to an HTMLCollection unless it's indexed
-*/
