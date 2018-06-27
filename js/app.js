@@ -184,7 +184,7 @@ function displayModal(){
     playAgainBtn.style.color = "white";
     modalContent.appendChild(playAgainBtn);   
 
-    return playAgainBtn;
+    closeModal.style.display = "none";//hides close window text on modal since modal will be closed by play again button
 }
 
 //duplicate card selections notification
