@@ -38,10 +38,10 @@ h1 {
  */
 
 .deck {
-    width: 660px;
-    min-height: 680px;
+    width: 550px; /*600px*/
+    min-height: 495px; /*680px*/
     background: linear-gradient(160deg, #02ccba 0%, #aa7ecd 100%);
-    padding: 32px;
+    padding: 15px;
     border-radius: 10px;
     box-shadow: 12px 15px 20px 0 rgba(46, 61, 73, 0.5);
     display: flex;
@@ -52,8 +52,8 @@ h1 {
 }
 
 .deck .card {
-    height: 125px;
-    width: 125px;
+    height: 110px; /*125px*/
+    width: 110px; /*125px*/
     background: #2e3d49;
     font-size: 0;
     color: #ffffff;
@@ -118,7 +118,7 @@ h1 {
 #modal-container{
     position: fixed;
     z-index: 10;
-    margin-top: -650px;
+    margin-top: -450px;
     margin-left: auto;
     width: 100%;
     height: 100%;
@@ -127,7 +127,7 @@ h1 {
 }
 
 #modal {    
-    height: 60%;
+    height: 50%;
     width: 40%;
     margin: auto;    
     padding: 1em;
@@ -156,9 +156,9 @@ h1 {
 }
 
 #modal-content {
-    font-size: 1.7em;
+    font-size: 1.3em;
     background-color: gainsboro;
-    height: 230px;
+    height: 200px;
     padding: 1em 0 0 1em;    
     border-radius: 10px;
 }
