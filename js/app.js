@@ -64,13 +64,15 @@ function showCard(){
             buttonClicked = indexedCards[i]; 
             
             console.log(buttonClicked.classList.value);
+            
             //checks for duplicate clicks
             if(buttonClicked.className === "card open show" || buttonClicked.className === "card open show match"){
-                console.log("you clicked that already"); //testing purposes
+                invalidMove();
             } else {
                 cardsOpened.push(buttonClicked)
                 movesCount();
             }                                  
+            
             //opening and closing of cards 
             if(cardsOpened.length < 2){
                 cardsOpened[0].classList += " open show";                            
@@ -175,14 +177,20 @@ function gameOver(){
     }   
 }
 
-//close modal/results window
+//close modal/game status window
 closeModal.addEventListener("click", function(){
     modal.style.display = "none";    
 });
 
 //displays game results
 function displayModal(){
-    modalContent.innerHTML +="<p>Great job! <br> Points earned:  <strong>" + playerPoints + "</strong></p> <p>You made:  <strong>" + playerMovesCount + "</strong> moves</p>" ;
+    modalContent.innerHTML ="<p>Great job! <br> Points earned:  <strong>" + playerPoints + "</strong></p> <p>You made:  <strong>" + playerMovesCount + "</strong> moves</p>" ;
+    modal.style.display = "inline";
+}
+
+//duplicate card selections notification
+function invalidMove(){
+    modalContent.innerHTML ="<p>Please try again! That card has already been selected. <br> Points earned:  <strong>" + playerPoints + "</strong></p> <p>You made:  <strong>" + playerMovesCount + "</strong> moves</p>" ;
     modal.style.display = "inline";
 }
 
