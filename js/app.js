@@ -4,11 +4,12 @@ const indexedCards = []; // used inside 1st for loop to capture the index of eac
 const cardsOpened = []; //to hold the opened cards'
 const myMatches = []; //to hold the cards that have been matched;
 
-//Trackers
+//Trackers & variables
 let playerMovesCount = 0; //the amount of clicks the player makes regardless of a match
 let playerPoints = 0; //keeps track of players points
 let clickCount = 0; //keeps track of the amount of clicks before matching the cards
 let buttonClicked; //used in 2nd for loop to hold the click event for the cards
+let playAgainBtn = document.createElement("button");//for restaring game from modal
 
 //Nodes
 let playerMoves = document.querySelector(".moves"); 
@@ -96,19 +97,6 @@ function clearArray() {
     cardsOpened.splice(0);
 }
 
- //checks for duplicate clicks
-//  function duplicateClicks(){
-//     if(cardsOpened.length > 1 && buttonClicked.childNodes[1] === cardsOpened[0].childNodes[1]){
-//        console.log("you clicked on that card already, please try anohter"); //for testing
-//        console.log(buttonClicked.childNodes[1]);
-//        cardsOpened.shift();
-//         clickCount = 1;
-//     } else if(cardsOpened.length > 1 && buttonClicked.childNodes[1] === cardsOpened[1].childNodes[1]){
-//        cardsOpened.pop();
-//        clickCount = 1;
-//    }
-// }
-
 //show cards selected
 function openCards(){
     cardsOpened[0].classList = "";
@@ -184,15 +172,34 @@ closeModal.addEventListener("click", function(){
 
 //displays game results
 function displayModal(){
-    modalContent.innerHTML ="<p>Great job! <br> Points earned:  <strong>" + playerPoints + "</strong></p> <p>You made:  <strong>" + playerMovesCount + "</strong> moves</p>" ;
     modal.style.display = "inline";
+   
+    modalContent.innerHTML ="<p>Great job! <br> Points earned:  <strong>" + playerPoints + "</strong></p> <p>You made:  <strong>" + playerMovesCount + "</strong> moves</p>";
+    
+    //creates & styles button to restart game from modal
+    // playAgainBtn = document.createElement("button");   
+    playAgainBtn.innerHTML = "<strong>Play Again</strong>";
+    playAgainBtn.style.backgroundColor = "cadetblue";
+    playAgainBtn.style.fontSize = "1em";
+    playAgainBtn.style.color = "white";
+    modalContent.appendChild(playAgainBtn);   
+
+    return playAgainBtn;
 }
 
 //duplicate card selections notification
 function invalidMove(){
-    modalContent.innerHTML ="<p>Please try again! That card has already been selected. <br> Points earned:  <strong>" + playerPoints + "</strong></p> <p>You made:  <strong>" + playerMovesCount + "</strong> moves</p>" ;
+    modalContent.innerHTML ="<p>Please try again! That card has already been selected. <br> Points earned:  <strong>" + playerPoints + "</strong></p> <p>You made:  <strong>" + playerMovesCount + "</strong> moves</p>";
+
     modal.style.display = "inline";
 }
+
+//restart game from modal
+playAgainBtn.addEventListener("click", function(){
+    modal.style.display = "none";
+    //restart game timer  
+    //reset game board 
+});
 
 //My logic endds here
 /* UDACITY'S NOTES
