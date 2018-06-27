@@ -55,73 +55,59 @@ function loopDeck(){
         indexedCards.push(deckLIs[i]); //turns collection into an array
     }
     return indexedCards;
-}  
-
+}
+ 
 //show & hide cards
 function showCard(){    
     for(let i = 0; i < indexedCards.length; i++){        
         indexedCards[i].addEventListener("click", function(){
             buttonClicked = indexedCards[i]; 
-        
-            cardsOpened.push(buttonClicked); //pushes initial card to cardsOpened array
-
-            clickCount += 1;
-                      
-            //may not need the clickCounter
-            if(cardsOpened.length < 2 && clickCount < 2){
-                cardsOpened[0].classList += " open show";
-                            
+            
+            console.log(buttonClicked.classList.value);
+            //checks for duplicate clicks
+            if(buttonClicked.className === "card open show" || buttonClicked.className === "card open show match"){
+                console.log("you clicked that already"); //testing purposes
+            } else {
+                cardsOpened.push(buttonClicked)
+                movesCount();
+            }                                  
+            //opening and closing of cards 
+            if(cardsOpened.length < 2){
+                cardsOpened[0].classList += " open show";                            
             } else if (cardsOpened.length === 2 && cardsOpened[0].childNodes[1].className === cardsOpened[1].childNodes[1].className){
                 openCards();                  
-                myCardMatches();
-                setTimeout(aMatch, 500);                
-                pointsEarned();
+                setTimeout(aMatch, 500);
+                myCardMatches();                                
                 movesCount();
-                setTimeout(gameOver, 600);
-                console.log("These are the classes for the cards I've matched, so far:", myMatches);
-                console.log("you made a match");movesCount(); //testing purposes
-                console.log("click count ", clickCount, " of ", clickCount); //testing purposes
-
+                pointsEarned();                
+                setTimeout(gameOver, 800);
             } else if(cardsOpened.length === 2 && cardsOpened[0].childNodes[1].className !== cardsOpened[1].childNodes[1].className){
                 openCards();
-                colorChange();
-                setTimeout(notAMatch, 800);
                 movesCount();
-                console.log("not a match"); //testing purposes
-                console.log("click count ", clickCount, " of ", clickCount) //testing purposes;                       
+                colorChange()               
+                setTimeout(notAMatch, 700);         
             }        
         });
     }
 }
  
-//resets click counter
- function resetClickCount(){
-    clickCount = 0;
-}
-
-//resets classList on LIs
-// function clearClassList(){
-//     cardsOpened[0].classList = "";
-//     cardsOpened[1].classList = ""; 
-// }
-
 //clears array that holds cards to be compared for a match
 function clearArray() {
     cardsOpened.splice(0);
 }
 
  //checks for duplicate clicks
- function duplicateClicks(){
-    if(cardsOpened.length > 1 && buttonClicked.childNodes[1] === cardsOpened[0].childNodes[1]){
-       console.log("you clicked on that card already, please try anohter"); //for testing
-       console.log(buttonClicked.childNodes[1]);
-       cardsOpened.shift();
-        clickCount = 1;
-    } else if(cardsOpened.length > 1 && buttonClicked.childNodes[1] === cardsOpened[1].childNodes[1]){
-       cardsOpened.pop();
-       clickCount = 1;
-   }
-}
+//  function duplicateClicks(){
+//     if(cardsOpened.length > 1 && buttonClicked.childNodes[1] === cardsOpened[0].childNodes[1]){
+//        console.log("you clicked on that card already, please try anohter"); //for testing
+//        console.log(buttonClicked.childNodes[1]);
+//        cardsOpened.shift();
+//         clickCount = 1;
+//     } else if(cardsOpened.length > 1 && buttonClicked.childNodes[1] === cardsOpened[1].childNodes[1]){
+//        cardsOpened.pop();
+//        clickCount = 1;
+//    }
+// }
 
 //show cards selected
 function openCards(){
@@ -160,16 +146,15 @@ function notAMatch(){
     cardsOpened[1].classList = "";
     cardsOpened[0].classList += "card";
     cardsOpened[1].classList += "card";
-    resetClickCount();
     clearArray();
 }
 
 //player points
 function pointsEarned(){
     playerPoints += 2;
-    if(playerPoints > 2 && playerPoints <= 7){
+    if(playerPoints > 3 && playerPoints <= 7){
         scoreStars[0].style.color = "yellow";
-    } else if(playerPoints > 8 && playerPoints <= 12){
+    } else if(playerPoints >= 8 && playerPoints <= 12){
         scoreStars[0].style.color = "yellow";
         scoreStars[1].style.color = "blue";
     } else if(playerPoints === 16){
@@ -192,14 +177,14 @@ function gameOver(){
     }   
 }
 
-//closes modal
+//close modal/results window
 closeModal.addEventListener("click", function(){
     modal.style.display = "none";    
 });
 
-//displays modal with results
+//displays game results
 function displayModal(){
-    modalContent.innerHTML +="<p>Great job! <br> Points earned:  <strong>" + playerPoints+ "</strong></p> <p>You made:  <strong>" + playerMovesCount + "</strong> moves</p>" ;
+    modalContent.innerHTML +="<p>Great job! <br> Points earned:  <strong>" + playerPoints + "</strong></p> <p>You made:  <strong>" + playerMovesCount + "</strong> moves</p>" ;
     modal.style.display = "inline";
 }
 
