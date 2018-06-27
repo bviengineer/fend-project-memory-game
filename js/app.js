@@ -78,12 +78,10 @@ function showCard(){
                 openCards();                  
                 setTimeout(aMatch, 500);
                 myCardMatches();                                
-                movesCount();
                 pointsEarned();                
                 setTimeout(gameOver, 800);
             } else if(cardsOpened.length === 2 && cardsOpened[0].childNodes[1].className !== cardsOpened[1].childNodes[1].className){
-                openCards();
-                movesCount();
+                openCards()
                 colorChange()               
                 setTimeout(notAMatch, 700);         
             }        
