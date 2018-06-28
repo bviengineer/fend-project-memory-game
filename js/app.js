@@ -1,27 +1,28 @@
 //Collections & Arrays
-const deckLIs = document.getElementsByClassName("card"); //deck of cards listed as <li>s (HTMLCollection)
-const indexedCards = []; // used inside 1st for loop to capture the index of each <li> in the deck of LIs (deckLIs)
-const cardsOpened = []; //to hold the opened cards'
-const myMatches = []; //to hold the cards that have been matched;
+const deckLIs = document.getElementsByClassName("card"), //deck of cards listed as <li>s (HTMLCollection)
+    indexedCards = [], // used inside 1st for loop to capture the index of each <li> in the deck of LIs (deckLIs)
+    cardsOpened = [], //to hold and compare the opened cards
+    myMatches = []; //to hold matched cards
 
 //Trackers & variables
-let playerMovesCount = 0; //the amount of clicks the player makes regardless of a match
-let playerPoints = 0; //keeps track of players points
-let clickCount = 0; //keeps track of the amount of clicks before matching the cards
-let buttonClicked; //used in 2nd for loop to hold the click event for the cards
-
+let playerMovesCount = 0, //tracks the # of clicks player makes regardless of a match
+    playerPoints = 0, //track points for # of correct guesses
+    playerPenalty = 0, //deducts points for incorrect guesses
+    incorrectGuesses = 0, //keeps tracks of the number of incorrect guesses
+    buttonClicked; //used in showCards func to hold the click event for each card 
+    
 //Nodes
-let playerMoves = document.querySelector(".moves"); 
-let modal = document.getElementById("modal-container");
-let closeModal = document.getElementById("close-window-text");
-let modalContent = document.getElementById("modal-content");
-let scoreStars = document.getElementsByClassName("fa fa-star");
-let restartGameButton = document.getElementById("restart");
-let playAgainButton = document.createElement("button");//for restaring game from modal
-let gameTimerHrs = document.getElementById("hrs");
-let gameTimerMins = document.getElementById("mins");
-let gameTimerSecs = document.getElementById("secs");
-let startGameButon = document.getElementById("start-timer");
+let playerMoves = document.querySelector(".moves"),
+    modal = document.getElementById("modal-container"),
+    closeModal = document.getElementById("close-window-text"),
+    modalContent = document.getElementById("modal-content"),
+    scoreStars = document.getElementsByClassName("fa fa-star"),
+    restartGameButton = document.getElementById("restart"),
+    playAgainButton = document.createElement("button");//for restaring game from modal
+// let gameTimerHrs = document.getElementById("hrs");
+// let gameTimerMins = document.getElementById("mins");
+// let gameTimerSecs = document.getElementById("secs");
+    startGameButon = document.getElementById("start-timer");
 
 /*UDACITY'S NOTES
  * Display the cards on the page
@@ -90,26 +91,47 @@ function showCard(){
             } else if(cardsOpened.length === 2 && cardsOpened[0].childNodes[1].className !== cardsOpened[1].childNodes[1].className){
                 openCards()
                 colorChange()               
-                setTimeout(notAMatch, 700);         
+                setTimeout(notAMatch, 700);  
+                incorrectNoGuesses();
+                playerPenaltyFunc();       
             }        
         });
     }
 }
+/* stand-alone EVENT LISTENERS in alaphabetical order */
+
+//close modal/game status window
+closeModal.addEventListener("click", function(){
+    modal.style.display = "none";    
+});
+
+//restart game from modal
+playAgainButton.addEventListener("click", function(){
+    modal.style.display = "none";
+    //restart game timer
+    resetStarRating();
+    resetMovesCount();  
+    resetGameBoard();
+    resetMyCardMatches();
+    resetPointsEarned();
+    resetStarRating();
+});
+
+//resets game board, timer & star rating
+restartGameButton.addEventListener("click", function(){
+    //restarts game timer
+    resetStarRating();
+    resetMovesCount();    
+    resetGameBoard();
+    resetMyCardMatches();
+    resetPointsEarned();
+    resetStarRating();
+});
  
-//clears array that holds cards to be compared for a match
-function clearArray() {
-    cardsOpened.splice(0);
-}
+ 
+/* FUNCTIONS in alphabetical order*/
 
-//show cards selected
-function openCards(){
-    cardsOpened[0].classList = "";
-    cardsOpened[1].classList = "";
-    cardsOpened[0].classList += "card open show";
-    cardsOpened[1].classList += "card open show";
-}
-
-//Card selections match
+//ensures matched cards remain open
 function aMatch(){
     cardsOpened[0].classList = "";
     cardsOpened[1].classList = "";
@@ -118,18 +140,12 @@ function aMatch(){
     clearArray();
 }
 
-//arry of all card matches/pairs
-function myCardMatches(){
-    myMatches.push(cardsOpened[0]);
-    myMatches.push(cardsOpened[1]);
-}   
-
-//resets array with matched cards
-function resetMyCardMatches(){
-    myMatches.splice(0);
+//clears CardsOpened array after which holds cards to be compared for a match
+function clearArray() {
+    cardsOpened.splice(0);
 }
 
-//wrong match color change
+//changes color of cards when guesses are incorrect
 function colorChange(){
     cardsOpened[0].classList = "";
     cardsOpened[1].classList = "";
@@ -137,7 +153,61 @@ function colorChange(){
     cardsOpened[1].classList += "card open show wrongMatch";
 }
 
-//resets unmatched cards
+//displays game results
+function displayModal(){
+    modal.style.display = "inline";
+   
+    modalContent.innerHTML ="<p>Great job! <br> Points earned:  <strong>" + playerPoints + "</strong></p> <p>You made:  <strong>" + playerMovesCount + "</strong> moves</p><p>The number of incorrect guesses were: <strong>"+ incorrectGuesses + "</strong></p";
+    
+    //creates, styles and append to modal, button to restart game from modal  
+    playAgainButton.innerHTML = "<strong>Play Again</strong>";
+    playAgainButton.style.backgroundColor = "cadetblue";
+    playAgainButton.style.fontSize = "1em";
+    playAgainButton.style.color = "white";
+    modalContent.appendChild(playAgainButton);   
+
+    //hides close window text on modal since modal will be closed by Play Again button
+    closeModal.style.display = "none";
+
+    /*
+    TO DO:
+    -Display time took to complete game in modal
+    -DISPLAY star rating in modal
+    */
+}
+
+//dislays modal once all cards are successfully matched
+function gameOver(){
+    if(myMatches.length === 16){
+       displayModal();    
+    }   
+}
+
+//incorrect guesses tracker
+function incorrectNoGuesses(){
+    incorrectGuesses += 1;
+}
+
+//duplicate card selections notification
+function invalidMove(){
+    modalContent.innerHTML ="<p>Please try again! That card has already been selected. <br> Points earned:  <strong>" + playerPoints + "</strong></p> <p>You made:  <strong>" + playerMovesCount + "</strong> moves</p>";
+
+    modal.style.display = "inline";
+}
+
+//tracks & displays number of moves player makes 
+function movesCount(){
+    playerMovesCount += 1;
+    playerMoves.innerHTML = playerMovesCount;
+}
+
+//arry of all card matches/pairs
+function myCardMatches(){
+    myMatches.push(cardsOpened[0]);
+    myMatches.push(cardsOpened[1]);
+}
+
+//closes unmatched cards
 function notAMatch(){
     cardsOpened[0].classList = "";
     cardsOpened[1].classList = "";
@@ -146,9 +216,22 @@ function notAMatch(){
     clearArray();
 }
 
-//player points
+//opens cards selected
+function openCards(){
+    cardsOpened[0].classList = "";
+    cardsOpened[1].classList = "";
+    cardsOpened[0].classList += "card open show";
+    cardsOpened[1].classList += "card open show";
+}
+
+//deducts points for incorrect guesses
+function playerPenaltyFunc(){
+    playerPoints -= 2;
+}
+
+//player points earned 
 function pointsEarned(){
-    playerPoints += 2;
+    playerPoints += 8;
     if(playerPoints > 12 && playerPoints <= 16){
         scoreStars[0].style.color = "yellow";
         scoreStars[1].style.display = "none";
@@ -164,27 +247,12 @@ function pointsEarned(){
     }
 }
 
-// //reset starRating
-// function resetStarRating(){
-//     scoreStars[0].style.display = "";
-//     scoreStars[1].style.display = "";
-//     scoreStars[2].style.display = "";
-//     scoreStars[0].style.display = "inline";
-//     scoreStars[1].style.display = "inline";
-//     scoreStars[2].style.display = "inline";
-//     console.log(storeStars[0]);
-
-// }
-
-//resets playerPoints
-function resetPointsEarned(){
-    playerPoints = 0;
-}
-
-//number of moves player makes 
-function movesCount(){
-    playerMovesCount += 1;
-    playerMoves.innerHTML = playerMovesCount;
+//resets game board
+function resetGameBoard(){
+    for(let i = 0; i < indexedCards.length; i++){
+        indexedCards[i].className = "";
+        indexedCards[i].className = "card";
+    }
 }
 
 //resets player moves
@@ -193,74 +261,14 @@ function resetMovesCount(){
     playerMoves.innerHTML = playerMovesCount;
 }
 
-//all matches successful
-function gameOver(){
-    if(myMatches.length === 16){
-       displayModal();    
-    }   
+//resets array with matched cards when player restarts game or selects play again
+function resetMyCardMatches(){
+    myMatches.splice(0);
 }
 
-//close modal/game status window
-closeModal.addEventListener("click", function(){
-    modal.style.display = "none";    
-});
-
-//displays game results
-function displayModal(){
-    modal.style.display = "inline";
-   
-    modalContent.innerHTML ="<p>Great job! <br> Points earned:  <strong>" + playerPoints + "</strong></p> <p>You made:  <strong>" + playerMovesCount + "</strong> moves</p>";
-    
-    //creates & styles button to restart game from modal  
-    playAgainButton.innerHTML = "<strong>Play Again</strong>";
-    playAgainButton.style.backgroundColor = "cadetblue";
-    playAgainButton.style.fontSize = "1em";
-    playAgainButton.style.color = "white";
-    modalContent.appendChild(playAgainButton);   
-
-    closeModal.style.display = "none";//hides close window text on modal since modal will be closed by play again buttonHide
-
-    /*TO DO:
-    -Display time took to complete game
-    -star rating */
-}
-
-//duplicate card selections notification
-function invalidMove(){
-    modalContent.innerHTML ="<p>Please try again! That card has already been selected. <br> Points earned:  <strong>" + playerPoints + "</strong></p> <p>You made:  <strong>" + playerMovesCount + "</strong> moves</p>";
-
-    modal.style.display = "inline";
-}
-
-//restart game from modal
-playAgainButton.addEventListener("click", function(){
-    modal.style.display = "none";
-    //restart game timer
-    resetStarRating();
-    resetMovesCount();  
-    resetGameBoard();
-    resetMyCardMatches();
-    resetPointsEarned();
-    resetStarRating();
-});
-
-//event listener reset game board, timer & star rating
-restartGameButton.addEventListener("click", function(){
-    //restarts game timer
-    resetStarRating();
-    resetMovesCount();    
-    resetGameBoard();
-    resetMyCardMatches();
-    resetPointsEarned();
-    resetStarRating();
-});
-
-//resets game board
-function resetGameBoard(){
-    for(let i = 0; i < indexedCards.length; i++){
-        indexedCards[i].className = "";
-        indexedCards[i].className = "card";
-    }
+//resets playerPoints
+function resetPointsEarned(){
+    playerPoints = 0;
 }
 
 //restart star rating
@@ -278,7 +286,8 @@ function startGame(){
         console.log(gameTimerSecs.value);
     }
 }
-startGame();
+
+
 //My logic endds here
 
 /* UDACITY'S NOTES
