@@ -9,7 +9,7 @@ let playerMovesCount = 0, //tracks the # of clicks player makes regardless of a 
     playerPoints = 0, //track points for # of correct guesses
     playerPenaltyPoints = 0, //deducts points for incorrect guesses
     incorrectGuesses = 0, //keeps tracks of the number of incorrect guesses
-    buttonClicked; //used in showCards func to hold the click event for each card 
+    finalStarRating = 0; //star rating to be presented after game buttonClicked; //used in showCards func to hold the click event for each card 
     
 //Nodes
 let playerMoves = document.querySelector(".moves"),
@@ -22,7 +22,7 @@ let playerMoves = document.querySelector(".moves"),
 // let gameTimerHrs = document.getElementById("hrs");
 // let gameTimerMins = document.getElementById("mins");
 // let gameTimerSecs = document.getElementById("secs");
-    startGameButon = document.getElementById("start-timer");
+    startGameButton = document.getElementById("start-timer");
 
 /*UDACITY'S NOTES
  * Display the cards on the page
@@ -68,7 +68,7 @@ function showCard(){
     for(let i = 0; i < indexedCards.length; i++){        
         indexedCards[i].addEventListener("click", function(){
             buttonClicked = indexedCards[i]; 
-                        
+
             //checks for duplicate clicks
             if(buttonClicked.className === "card open show" || buttonClicked.className === "card open show match"){
                 invalidMove();
@@ -88,10 +88,11 @@ function showCard(){
                 starRating();
                 setTimeout(gameOver, 800);
             } else if(cardsOpened.length === 2 && cardsOpened[0].childNodes[1].className !== cardsOpened[1].childNodes[1].className){
-                openCards()
-                colorChange()               
-                setTimeout(notAMatch, 700);  
-                incorrectNoGuesses();
+                openCards();
+                colorChange();
+                incorrectNoGuesses();               
+                setTimeout(notAMatch, 700);                  
+                starRating();
                 playerPenaltyFunc();       
             }        
         });
@@ -161,7 +162,7 @@ function colorChange(){
 function displayModal(){
     modal.style.display = "inline";
    
-    modalContent.innerHTML ="<p>Great job! <br> Points earned:  <strong>" + playerPoints + "</strong></p> <p>You made:  <strong>" + playerMovesCount + "</strong> moves</p><p>Numeber of incorrect guesses: <strong>"+ incorrectGuesses + "</strong></p";
+    modalContent.innerHTML ="<p>Great job! You matched all the cards.</p> <p>Points earned:  <strong>" + playerPoints + "</strong><br> Star rating: <strong> " + finalStarRating + "</strong><br> Moves made: <strong> " + playerMovesCount + "</strong> <br> Incorrect guesses: <strong>"+ incorrectGuesses + "</strong></p";
     
     //creates, styles and append to modal, button to restart game from modal  
     playAgainButton.innerHTML = "<strong>Play Again</strong>";
@@ -280,21 +281,24 @@ function resetGameBoard(){
     }
 }
 
-//player points earned was PointsEarned
-function starRating(){
-    if(playerPoints > 8 && playerPoints <= 24){
-        scoreStars[0].style.color = "yellow";
+//star rating
+const starRating = function(){
+    if(incorrectGuesses === 0 || incorrectGuesses <= 4){
+        scoreStars[0].style.display= "inline";
+        scoreStars[1].style.display = "inline";
+        scoreStars[2].style.display = "inline";
+        finalStarRating = 3;
+    } else if(incorrectGuesses >= 5 && incorrectGuesses <= 10){
+        scoreStars[0].style.display = "inline";
+        scoreStars[1].style.display = "inline";
+        scoreStars[2].style.display = "none";
+        finalStarRating = 2;
+    } else if(incorrectGuesses > 10){
+        scoreStars[0].style.display = "inline";
         scoreStars[1].style.display = "none";
-        scoreStars[2].style.display = "none";
-    } else if(playerPoints > 24 && playerPoints <= 40){
-        scoreStars[0].style.display = "yellow";
-        scoreStars[1].style.color = "yellow";
-        scoreStars[2].style.display = "none";
-    } else if(playerPoints === 0){
-        scoreStars[0].style.color = "yellow";
-        scoreStars[1].style.color = "yellow";
-        scoreStars[2].style.color = "yellow";
-    }
+        scoreStars[2].style.color = "none";
+        finalStarRating = 1;
+    } 
 }
 //restart star rating 
 function resetStarRating(){
