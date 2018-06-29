@@ -1,18 +1,32 @@
+// let d = new Date();
+//  let pageLoadSec = d.getSeconds();
+//  let clickSec = d.getSeconds();
+ 
+//  function startGame(){
+//     console.log(clickSec);
+//  }
+
+//  setInterval(startGame, 1000);
+//  clearInterval(startGame, 10);
+
 //Collections & Arrays
-const deckLIs = document.getElementsByClassName("card"), //deck of cards listed as <li>s (HTMLCollection)
+const deckLIs = document.getElementsByClassName("card"); //deck of cards listed as <li>s (HTMLCollection)
     indexedCards = [], // used inside 1st for loop to capture the index of each <li> in the deck of LIs (deckLIs)
     cardsOpened = [], //to hold and compare the opened cards
     myMatches = []; //to hold matched cards
+let shuffledDeck = []; //holds deck of shuffled cards
 
 //Trackers & variables
 let playerMovesCount = 0, //tracks the # of clicks player makes regardless of a match
     playerPoints = 0, //track points for # of correct guesses
+    totalPoints = 0; //holds calculation for playerPoints - playerPenaltyPoints
     playerPenaltyPoints = 0, //deducts points for incorrect guesses
     incorrectGuesses = 0, //keeps tracks of the number of incorrect guesses
     finalStarRating = 0; //star rating to be presented after game buttonClicked; //used in showCards func to hold the click event for each card 
     
 //Nodes
-let playerMoves = document.querySelector(".moves"),
+let deckUL = document.querySelector(".deck");
+    playerMoves = document.querySelector(".moves"),
     modal = document.getElementById("modal-container"),
     closeModal = document.getElementById("close-window-text"),
     modalContent = document.getElementById("modal-content"),
@@ -33,27 +47,30 @@ let playerMoves = document.querySelector(".moves"),
 
  //UDACITY'S NOTES
 // Shuffle function from http://stackoverflow.com/a/2450976
- //array was the var that once appeared where all appereances of deck exist in the shuffle function
- function shuffle(indexedCards) {
-    var currentIndex = indexedCards.length, temporaryValue, randomIndex;
+/* 
+Used like so
+var arr = [2, 11, 37, 42];
+arr = shuffle(arr);
+console.log(arr);
+*/
+ function shuffle(array) {
+    var currentIndex = array.length, temporaryValue, randomIndex;
 
     while (currentIndex !== 0) {
         randomIndex = Math.floor(Math.random() * currentIndex);
         currentIndex -= 1;
-        temporaryValue = indexedCards[currentIndex];
-        indexedCards[currentIndex] = indexedCards[randomIndex];
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
     }
-    return indexedCards;
+    return array;
 }
 
 //MY Logic begins here
+// setTimeout(GameInstructions, 200);
 loopDeck();
+listShuffledDeck();
 showCard();
-
-//shuffles deck if shuff button is clicked
-// shuffleDeck.addEventListener("click", function(){
-//     shuffle();
-// });
 
 //Loops through deck of HTMLCollections and places each item in an array
 function loopDeck(){
@@ -62,20 +79,36 @@ function loopDeck(){
     }
     return indexedCards;
 }
- 
-//show & hide cards
-function showCard(){    
-    for(let i = 0; i < indexedCards.length; i++){        
-        indexedCards[i].addEventListener("click", function(){
-            buttonClicked = indexedCards[i]; 
 
+//Puts shuffled deck on page
+function listShuffledDeck(){
+    shuffledDeck = indexedCards;
+    shuffledDeck = shuffle(shuffledDeck);
+    console.log("deck b4 appending to page: ", shuffledDeck); //testiting
+    
+    for(let j = 0; j < deckUL.length; j++){
+        deckUL.removeChild(deckUL[j]);
+    }
+    
+    for(let i = 0; i < shuffledDeck.length; i++){
+        deckUL.appendChild(shuffledDeck[i]);
+    }
+    console.log("deck after appending shuffled cards", deckUL); //testing    
+}
+
+//show & hide cards
+function showCard(event){
+    for(let i = 0; i < shuffledDeck.length; i++){        
+        shuffledDeck[i].addEventListener("click", function(){
+            buttonClicked = shuffledDeck[i];
+            
             //checks for duplicate clicks
             if(buttonClicked.className === "card open show" || buttonClicked.className === "card open show match"){
                 invalidMove();
             } else {
-                cardsOpened.push(buttonClicked)
+                cardsOpened.push(buttonClicked);
                 movesCount();
-            }                                  
+            }
             
             //opening and closing of cards 
             if(cardsOpened.length < 2){
@@ -90,7 +123,8 @@ function showCard(){
             } else if(cardsOpened.length === 2 && cardsOpened[0].childNodes[1].className !== cardsOpened[1].childNodes[1].className){
                 openCards();
                 colorChange();
-                incorrectNoGuesses();               
+                incorrectNoGuesses();
+                playerPenaltyFunc();         
                 setTimeout(notAMatch, 700);                  
                 starRating();
                 playerPenaltyFunc();       
@@ -129,7 +163,9 @@ restartGameButton.addEventListener("click", function(){
     resetPenaltyPoints();
     resetStarRating();
     resetMovesCount();
-    resetMyCardMatches();   
+    resetMyCardMatches();  
+    shuffle(shuffledDeck);
+    listShuffledDeck();
 });
  
  
@@ -159,10 +195,8 @@ function colorChange(){
 }
 
 //displays game results
-function displayModal(){
-    modal.style.display = "inline";
-   
-    modalContent.innerHTML ="<p>Great job! You matched all the cards.</p> <p>Points earned:  <strong>" + playerPoints + "</strong><br> Star rating: <strong> " + finalStarRating + "</strong><br> Moves made: <strong> " + playerMovesCount + "</strong> <br> Incorrect guesses: <strong>"+ incorrectGuesses + "</strong></p";
+function displayModal(){   
+    modalContent.innerHTML ="<p>Great job! You matched all the cards.</p> <p>Points earned:  <strong>" + totalPoints + "</strong><br> Star rating: <strong> " + finalStarRating + "</strong><br> Moves made: <strong> " + playerMovesCount + "</strong> <br> Incorrect guesses: <strong>"+ incorrectGuesses + "</strong></p";
     
     //creates, styles and append to modal, button to restart game from modal  
     playAgainButton.innerHTML = "<strong>Play Again</strong>";
@@ -174,6 +208,8 @@ function displayModal(){
     //hides "Close Window" text on modal since modal will be closed by "Play Again" button
     closeModal.style.display = "none";
 
+    modal.style.display = "inline";
+
     /*
     TO DO:
     -Display time took to complete game in modal
@@ -181,19 +217,36 @@ function displayModal(){
     */
 }
 
+//appears after the page loads
+function GameInstructions(){
+    modalContent.innerHTML =`<p>Welcome to <strong>Memory Game</strong>. To play:
+        <ul>
+            <li>Select two matching cards by clicking on the cards to reveal their images</li>
+            <li>You earn 12.5 points for each matching guess</li>
+            <li>You loose 2 points for each incorrect guess</li>
+            <li>You earn 4 extra points if you complete the game without any incorrect gueses, OR</li>
+            <li>You earn 2 extra points if you complete the game with 2 incorrect guesses, OR</li>
+            <li>You earn 1 extra point if you complete the game with 1 incorrect guess</li>
+            <li>The game timer will begin as soon as you click your first card and stop once the game is completed or if you restart the game</li>
+            <li>Your total points, star rating and moves, will be displayed after you match all cards</li>
+        </ul>
+    </p>`;      
+    modal.style.display = "inline";
+}
+
 //dislays modal once all cards are successfully matched
 function gameOver(){
     if(myMatches.length === 16 && incorrectGuesses === 0){
         //player earns an addt'l 4-pts if the # no. of incorrect guesses are <= 2
-        playerPoints += 4; 
-        displayModal();
+        totalPoints += 4; 
+        displayModal()
     } 
         else if(myMatches.length === 16 && incorrectGuesses === 1){
-            playerPoints += 2;
+            totalPoints += 2;
             displayModal();    
         }
         else if(myMatches.length === 16 && incorrectGuesses === 2){
-            playerPoints += 1;
+            totalPoints += 1;
             displayModal();    
         }
         else if(myMatches.length === 16 && incorrectGuesses > 2){
@@ -212,9 +265,9 @@ function resetWrongGuesses(){
 
 //duplicate card selections notification
 function invalidMove(){
-    modal.style.display = "inline";
+    modalContent.innerHTML ="<p>Please try again! That card has already been selected. <br> <p>You've made:  <strong>" + playerMovesCount + "</strong> moves</p>";
 
-    modalContent.innerHTML ="<p>Please try again! That card has already been selected. <br> Points earned:  <strong>" + playerPoints + "</strong></p> <p>You've made:  <strong>" + playerMovesCount + "</strong> moves</p>";
+    modal.style.display = "inline";
 }
 
 //tracks & displays number of moves player makes 
@@ -257,7 +310,7 @@ function openCards(){
 
 //deducts points for incorrect guesses & for use with starRating function
 function playerPenaltyFunc(){
-   playerPenaltyPoints -= 2;
+   playerPenaltyPoints += 2;
 }
 //resets penalty points 
 function resetPenaltyPoints(){
@@ -266,11 +319,13 @@ function resetPenaltyPoints(){
 
 //tracks player points for correct guesses
 function pointsEarned   (){
-    playerPoints += 12;
+    playerPoints += 12.5;
+    totalPoints = playerPoints - playerPenaltyPoints;
 }
 //resets playerPoints 
 function resetPointsEarned(){
     playerPoints = 0;
+    totalPoints = 0;
 }
 
 //resets game board
@@ -308,13 +363,13 @@ function resetStarRating(){
 }
 
 //game timer
-function startGame(){
-    if(gameTimerSecs.value === 0 && myMatches.length < 16){
-        gameTimerSecs += 1;
-        gameTimerSecs.value = gameTimerSecs;
-        console.log(gameTimerSecs.value);
-    }
-}
+// function startGame(){
+//     if(gameTimerSecs.value === 0 && myMatches.length < 16){
+//         gameTimerSecs += 1;
+//         gameTimerSecs.value = gameTimerSecs;
+//         console.log(gameTimerSecs.value);
+//     }
+// }
 //My logic endds here
 
 /* UDACITY'S NOTES
@@ -333,4 +388,7 @@ function startGame(){
  BUGS
 NONE at this time  
  */
+
+ 
+ 
 
