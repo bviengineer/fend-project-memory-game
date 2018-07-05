@@ -1,14 +1,3 @@
-// let d = new Date();
-//  let pageLoadSec = d.getSeconds();
-//  let clickSec = d.getSeconds();
- 
-//  function startGame(){
-//     console.log(clickSec);
-//  }
-
-//  setInterval(startGame, 1000);
-//  clearInterval(startGame, 10);
-
 //Collections & Arrays
 const deckLIs = document.getElementsByClassName("card"); //deck of cards listed as <li>s (HTMLCollection)
     indexedCards = [], // used inside 1st for loop to capture the index of each <li> in the deck of LIs (deckLIs)
@@ -22,7 +11,10 @@ let playerMovesCount = 0, //tracks the # of clicks player makes regardless of a 
     totalPoints = 0; //holds calculation for playerPoints - playerPenaltyPoints
     playerPenaltyPoints = 0, //deducts points for incorrect guesses
     incorrectGuesses = 0, //keeps tracks of the number of incorrect guesses
-    finalStarRating = 0; //star rating to be presented after game buttonClicked; //used in showCards func to hold the click event for each card 
+    finalStarRating = 0, //star rating to be presented after game buttonClicked; //used in showCards func to hold the click event for each card 
+    minutes = 0,
+    seconds = 0,
+    hours = 0;
     
 //Nodes
 let deckUL = document.querySelector(".deck");
@@ -33,10 +25,29 @@ let deckUL = document.querySelector(".deck");
     scoreStars = document.getElementsByClassName("fa fa-star"),
     restartGameButton = document.getElementById("restart"),
     playAgainButton = document.createElement("button");//for restaring game from modal
-// let gameTimerHrs = document.getElementById("hrs");
-// let gameTimerMins = document.getElementById("mins");
-// let gameTimerSecs = document.getElementById("secs");
-    startGameButton = document.getElementById("start-timer");
+    gameTimerDisplay = document.getElementById("game-timer-content"),
+    stopTimerButton = document.getElementById("stop-timer");
+    // startGameButton = document.getElementById("start-timer");    
+    
+//Game Timer
+//Adopted from Daniel Hug's JS Stopwatch: https://jsfiddle.net/Daniel_Hug/pvk6p/
+let myGameTimer = setInterval(gameTimer, 1000);    
+    function gameTimer(){
+        seconds++;
+        if(seconds >= 60){
+            seconds = 0;
+            minutes++
+            if(minutes >= 60){
+                minutes = 0;
+                hours++
+            }
+        }                     
+
+        gameTimerDisplay.innerHTML = hours + ":" + minutes + ":" + seconds;
+    }
+    stopTimerButton.addEventListener("click", function(){
+        clearInterval(myGameTimer);
+    });
 
 /*UDACITY'S NOTES
  * Display the cards on the page
@@ -67,7 +78,6 @@ console.log(arr);
 }
 
 //MY Logic begins here
-// setTimeout(GameInstructions, 200);
 loopDeck();
 listShuffledDeck();
 showCard();
@@ -85,10 +95,6 @@ function listShuffledDeck(){
     shuffledDeck = indexedCards;
     shuffledDeck = shuffle(shuffledDeck);
     console.log("deck b4 appending to page: ", shuffledDeck); //testiting
-    
-    for(let j = 0; j < deckUL.length; j++){
-        deckUL.removeChild(deckUL[j]);
-    }
     
     for(let i = 0; i < shuffledDeck.length; i++){
         deckUL.appendChild(shuffledDeck[i]);
@@ -153,24 +159,22 @@ playAgainButton.addEventListener("click", function(){
     resetMyCardMatches(); 
 });
 
-//resets game from button on page
+//resets game using restart button on page
 restartGameButton.addEventListener("click", function(){
     
-    //restarts game timer
+    //add restart game timer
     resetGameBoard();
     resetPointsEarned();
     resetWrongGuesses();
     resetPenaltyPoints();
     resetStarRating();
     resetMovesCount();
-    resetMyCardMatches();  
-    shuffle(shuffledDeck);
-    listShuffledDeck();
+    resetMyCardMatches();
 });
  
  
 /* FUNCTIONS BEGIN HERE:
-They are in alphabetical order with their corresponding reset counterpart listed immediately after, if any */
+Listed in alphabetical order with their corresponding reset counterpart listed immediately after, if any */
 
 //ensures matched cards remain open
 function aMatch(){
@@ -196,7 +200,8 @@ function colorChange(){
 
 //displays game results
 function displayModal(){   
-    modalContent.innerHTML ="<p>Great job! You matched all the cards.</p> <p>Points earned:  <strong>" + totalPoints + "</strong><br> Star rating: <strong> " + finalStarRating + "</strong><br> Moves made: <strong> " + playerMovesCount + "</strong> <br> Incorrect guesses: <strong>"+ incorrectGuesses + "</strong></p";
+    clearInterval(myGameTimer);
+    modalContent.innerHTML ="<p>Great job! You matched all the cards.</p> <p>Points earned:  <strong>" + totalPoints + "</strong><br> Star rating: <strong> " + finalStarRating + "</strong><br> Moves made: <strong> " + playerMovesCount + "</strong> <br> Incorrect guesses: <strong>"+ incorrectGuesses + "</strong> <br> Time: <strong>" + minutes +":" + seconds + " </strong></p";
     
     //creates, styles and append to modal, button to restart game from modal  
     playAgainButton.innerHTML = "<strong>Play Again</strong>";
@@ -209,12 +214,6 @@ function displayModal(){
     closeModal.style.display = "none";
 
     modal.style.display = "inline";
-
-    /*
-    TO DO:
-    -Display time took to complete game in modal
-    -DISPLAY star rating in modal
-    */
 }
 
 //appears after the page loads
@@ -361,15 +360,6 @@ function resetStarRating(){
         scoreStars[i].style.display = "inline";
     }
 }
-
-//game timer
-// function startGame(){
-//     if(gameTimerSecs.value === 0 && myMatches.length < 16){
-//         gameTimerSecs += 1;
-//         gameTimerSecs.value = gameTimerSecs;
-//         console.log(gameTimerSecs.value);
-//     }
-// }
 //My logic endds here
 
 /* UDACITY'S NOTES
@@ -382,13 +372,3 @@ function resetStarRating(){
  *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
-
- 
- /*My Observations
- BUGS
-NONE at this time  
- */
-
- 
- 
-
