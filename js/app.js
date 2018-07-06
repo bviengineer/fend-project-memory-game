@@ -27,7 +27,7 @@ let deckUL = document.querySelector(".deck");
     restartGameButton = document.getElementById("restart"),
     playAgainButton = document.createElement("button"),//for restaring game from modal
     startGameButton = document.createElement("button"),//for restaring game from modal
-    gameTimerDisplay = document.getElementById("game-timer-content"),
+    gameTimerDisplay = document.getElementById("time-display-para"),
     stopTimerButton = document.getElementById("stop-timer");
 /*
 UDACITY'S NOTES
