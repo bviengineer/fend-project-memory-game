@@ -14,7 +14,8 @@ let playerMovesCount = 0, //tracks the # of clicks player makes regardless of a 
     finalStarRating = 0, //star rating to be presented after game buttonClicked; //used in showCards func to hold the click event for each card 
     minutes = 0,
     seconds = 0,
-    hours = 0;
+    hours = 0,
+    time = 0;
     
 //Nodes
 let deckUL = document.querySelector(".deck");
@@ -24,47 +25,24 @@ let deckUL = document.querySelector(".deck");
     modalContent = document.getElementById("modal-content"),
     scoreStars = document.getElementsByClassName("fa fa-star"),
     restartGameButton = document.getElementById("restart"),
-    playAgainButton = document.createElement("button");//for restaring game from modal
+    playAgainButton = document.createElement("button"),//for restaring game from modal
+    startGameButton = document.createElement("button"),//for restaring game from modal
     gameTimerDisplay = document.getElementById("game-timer-content"),
     stopTimerButton = document.getElementById("stop-timer");
-    // startGameButton = document.getElementById("start-timer");    
-    
-//Game Timer
-//Adopted from Daniel Hug's JS Stopwatch: https://jsfiddle.net/Daniel_Hug/pvk6p/
-let myGameTimer = setInterval(gameTimer, 1000);    
-    function gameTimer(){
-        seconds++;
-        if(seconds >= 60){
-            seconds = 0;
-            minutes++
-            if(minutes >= 60){
-                minutes = 0;
-                hours++
-            }
-        }                     
-
-        gameTimerDisplay.innerHTML = hours + ":" + minutes + ":" + seconds;
-    }
-    stopTimerButton.addEventListener("click", function(){
-        clearInterval(myGameTimer);
-    });
-
-/*UDACITY'S NOTES
- * Display the cards on the page
- *   - shuffle the list of cards using the provided "shuffle" method below
- *   - loop through each card and create its HTML
- *   - add each card's HTML to the page
- */
-
- //UDACITY'S NOTES
-// Shuffle function from http://stackoverflow.com/a/2450976
-/* 
-Used like so
-var arr = [2, 11, 37, 42];
-arr = shuffle(arr);
-console.log(arr);
+/*
+UDACITY'S NOTES
+    Display the cards on the page
+    - shuffle the list of cards using the provided "shuffle" method below
+    - loop through each card and create its HTML
+    - add each card's HTML to the page
+ 
+Shuffle function from http://stackoverflow.com/a/2450976 
+    Used like
+    var arr = [2, 11, 37, 42];
+    arr = shuffle(arr);
+    console.log(arr);
 */
- function shuffle(array) {
+function shuffle(array) {
     var currentIndex = array.length, temporaryValue, randomIndex;
 
     while (currentIndex !== 0) {
@@ -78,6 +56,7 @@ console.log(arr);
 }
 
 //MY Logic begins here
+setTimeout(gameInstructions, 1000);
 loopDeck();
 listShuffledDeck();
 showCard();
@@ -106,8 +85,9 @@ function listShuffledDeck(){
 function showCard(event){
     for(let i = 0; i < shuffledDeck.length; i++){        
         shuffledDeck[i].addEventListener("click", function(){
-            buttonClicked = shuffledDeck[i];
             
+            buttonClicked = shuffledDeck[i];
+
             //checks for duplicate clicks
             if(buttonClicked.className === "card open show" || buttonClicked.className === "card open show match"){
                 invalidMove();
@@ -148,8 +128,6 @@ closeModal.addEventListener("click", function(){
 //resets game from modal
 playAgainButton.addEventListener("click", function(){
     modal.style.display = "none";
-    
-    //restart game timer
     resetGameBoard();
     resetPointsEarned();
     resetWrongGuesses();
@@ -157,12 +135,12 @@ playAgainButton.addEventListener("click", function(){
     resetStarRating();
     resetMovesCount();
     resetMyCardMatches(); 
+    resetMyTimer();
+    startTimer();
 });
 
 //resets game using restart button on page
 restartGameButton.addEventListener("click", function(){
-    
-    //add restart game timer
     resetGameBoard();
     resetPointsEarned();
     resetWrongGuesses();
@@ -170,8 +148,19 @@ restartGameButton.addEventListener("click", function(){
     resetStarRating();
     resetMovesCount();
     resetMyCardMatches();
+    resetMyTimer();
+    startTimer();
 });
- 
+
+ //start game timer from within modal
+ startGameButton.addEventListener("click", function(){
+    startTimer();
+    modal.style.display = "none";
+});
+
+stopTimerButton.addEventListener("click", function(){
+    clearTimeout(time);
+});
  
 /* FUNCTIONS BEGIN HERE:
 Listed in alphabetical order with their corresponding reset counterpart listed immediately after, if any */
@@ -200,36 +189,44 @@ function colorChange(){
 
 //displays game results
 function displayModal(){   
-    clearInterval(myGameTimer);
+    clearTimeout(time);
+
     modalContent.innerHTML ="<p>Great job! You matched all the cards.</p> <p>Points earned:  <strong>" + totalPoints + "</strong><br> Star rating: <strong> " + finalStarRating + "</strong><br> Moves made: <strong> " + playerMovesCount + "</strong> <br> Incorrect guesses: <strong>"+ incorrectGuesses + "</strong> <br> Time: <strong>" + minutes +":" + seconds + " </strong></p";
+
+    resetMyTimer();
     
     //creates, styles and append to modal, button to restart game from modal  
     playAgainButton.innerHTML = "<strong>Play Again</strong>";
     playAgainButton.style.backgroundColor = "cadetblue";
     playAgainButton.style.fontSize = "1em";
     playAgainButton.style.color = "white";
-    modalContent.appendChild(playAgainButton);   
-
-    //hides "Close Window" text on modal since modal will be closed by "Play Again" button
-    closeModal.style.display = "none";
+    modalContent.appendChild(playAgainButton); 
 
     modal.style.display = "inline";
 }
 
 //appears after the page loads
-function GameInstructions(){
+function gameInstructions(){
     modalContent.innerHTML =`<p>Welcome to <strong>Memory Game</strong>. To play:
         <ul>
-            <li>Select two matching cards by clicking on the cards to reveal their images</li>
+            <li>Select 2 matching cards</li>
             <li>You earn 12.5 points for each matching guess</li>
+            <li>4 extra points if you complete the game without any incorrect gueses, OR</li>
+            <li>2 extra points if you complete the game with 2 incorrect guesses, OR</li>
+            <li>1 extra point if you complete the game with 1 incorrect guess</li>
             <li>You loose 2 points for each incorrect guess</li>
-            <li>You earn 4 extra points if you complete the game without any incorrect gueses, OR</li>
-            <li>You earn 2 extra points if you complete the game with 2 incorrect guesses, OR</li>
-            <li>You earn 1 extra point if you complete the game with 1 incorrect guess</li>
-            <li>The game timer will begin as soon as you click your first card and stop once the game is completed or if you restart the game</li>
-            <li>Your total points, star rating and moves, will be displayed after you match all cards</li>
+            <li>Game timer begins when you "Play Game"</li>
+            <li>Total points, star rating and moves, will be displayed after all cards are matched</li>
         </ul>
     </p>`;      
+    
+    //creates, styles and append to modal, button to start game from modal  
+    startGameButton.innerHTML = "<strong>Start Game!</strong>";
+    startGameButton.style.backgroundColor = "cadetblue";
+    startGameButton.style.fontSize = "1em";
+    startGameButton.style.color = "white";
+    modalContent.appendChild(startGameButton); 
+
     modal.style.display = "inline";
 }
 
@@ -288,6 +285,32 @@ function myCardMatches(){
 //resets array of matched cards
 function resetMyCardMatches(){
     myMatches.splice(0);
+}
+
+//Game Timer Function
+function startTimer(){
+    time = setTimeout(gameTimer, 1000);
+}
+
+//Adopted from Daniel Hug's JS Stopwatch: https://jsfiddle.net/Daniel_Hug/pvk6p/
+function gameTimer(){
+    seconds++;
+    if(seconds >= 60){
+        seconds = 0;
+        minutes++
+        if(minutes >= 60){
+            minutes = 0;
+            hours++
+        }
+    }         
+    gameTimerDisplay.innerHTML = hours + ":" + minutes + ":" + seconds;
+    startTimer();
+}
+function resetMyTimer(){
+    seconds = 0;
+    minutes = 0;
+    hours = 0;
+    gameTimerDisplay.innerHTML = hours + ":" + minutes + ":" + seconds;
 }
 
 //closes unmatched cards & clears the cardsOpened array
