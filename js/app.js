@@ -219,7 +219,7 @@ function gameInstructions(){
             <li>4 extra points if you complete the game without any incorrect gueses, OR</li>
             <li>2 extra points if you complete the game with 2 incorrect guesses, OR</li>
             <li>1 extra point if you complete the game with 1 incorrect guess</li>
-            <li>You loose 2 points for each incorrect guess</li>
+            <li>You loose 2 points for each incorrectly guessed pair</li>
             <li>Game timer begins when you "Start Game!"</li>
             <li>Total points, star rating and moves, will be displayed after all cards are matched</li>
         </ul>
