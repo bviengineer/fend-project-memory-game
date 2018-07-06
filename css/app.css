@@ -117,39 +117,34 @@ h1 {
 }
 
 /* 
-* Timer Modal
+* Game Timer Modal
 */
 #game-timer-container{
     position: fixed;
     z-index: 9;
     margin-top: -595px;
-    margin-left: 3em;
+    margin-left: 1em;
     width: 20%;
-    height: 30%;
+    height: auto;
     display: inline-block;
-    /* border-radius: 10px; */
+    border-radius: 5px;
     background-color: red;
+    text-align: center;
 }
 
 #game-timer-content {
-    height: auto;
+    width: auto;
     height: 70%;
-    background-color: yellow;
-}
-
-#game-timer-content h1 {
-    text-align: center;
+    background-color: cadetblue;
 }
 
 #game-timer-content p {
-    text-align: center;
     font-size: 1.7em;
 }
 
-#start-timer{
-    margin-bottom: 0em;
-    margin-top: 1.1em;
-    margin-left: 4em;
+#start-timer, #stop-timer{
+    margin-bottom: 0.5em;
+    padding: auto;
 }
 
 /* 
@@ -202,5 +197,3 @@ h1 {
     padding: 0.5em 0 0 1em;    
     border-radius: 10px;
 }
-
- 
