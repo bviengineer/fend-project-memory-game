@@ -125,6 +125,7 @@ closeModal.addEventListener("click", function(){
 playAgainButton.addEventListener("click", function(){
     modal.style.display = "none";
     resetGameBoard();
+    clearArray();
     listShuffledDeck();
     resetPointsEarned();
     resetWrongGuesses();
@@ -140,6 +141,7 @@ playAgainButton.addEventListener("click", function(){
 //Resets game using restart button on page
 restartGameButton.addEventListener("click", function(){
     resetGameBoard();
+    clearArray();
     listShuffledDeck();
     resetPointsEarned();
     resetWrongGuesses();
