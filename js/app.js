@@ -106,8 +106,7 @@ function showCard(event){
             } else if(cardsOpened.length === 2 && cardsOpened[0].childNodes[1].className !== cardsOpened[1].childNodes[1].className){
                 openCards();
                 colorChange();
-                incorrectNoGuesses();
-                // playerPenaltyFunc();         
+                incorrectNoGuesses();     
                 setTimeout(notAMatch, 700);                  
                 starRating();
                 playerPenaltyFunc();       
@@ -181,7 +180,7 @@ function aMatch(){
     clearArray();
 }
 
-//Clears CardsOpened array after two cards are compared for a match
+//Clears cardsOpened array after two cards are compared for a match
 function clearArray() {
     cardsOpened.splice(0);
 }
@@ -234,14 +233,13 @@ function gameInstructions(){
     modal.style.display = "inline";
 }
 
-/*Dislays modal with results once all cards are successfully matched
+/*Dislays in modal with results once all cards are successfully matched
 -player earns an addt'l 4-pts if the # no. of incorrect guesses = 0 
--OR, an addt'l 2-pts if the no. of incorrect guesses = 1
--OR, an addt'l 1-pt if the no. of incorrecdt guesses = 2
+-OR, an addt'l  2-pts if the no. of incorrect guesses = 1
+-OR, an addt'l  1-pt if the no. of incorrecdt guesses = 2
 */
 function gameOver(){
-    if(myMatches.length === 16 && incorrectGuesses === 0){
-        
+    if(myMatches.length === 16 && incorrectGuesses === 0){        
         totalPoints += 4; 
         displayModal()
     } 
@@ -254,7 +252,7 @@ function gameOver(){
             displayModal();    
         }
         else if(myMatches.length === 16 && incorrectGuesses > 2){
-        displayModal();    
+            displayModal();    
         }
 }
 

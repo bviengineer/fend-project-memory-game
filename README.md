@@ -19,5 +19,16 @@ This repository is the starter code for _all_ Udacity students. Therefore, we mo
 
 For details, check out [CONTRIBUTING.md](CONTRIBUTING.md).
 
+##Game Dependencies
+* Font Awesome https://fontawesome.com/
+* Google Font https://fonts.google.com/
+
+##Credits
+* Fisher-Yates (aka Knuth) Shuffle Function obained from Stack Overflow http://stackoverflow.com/a/2450976 and originallhy posted on GitHub https://github.com/Daplie/knuth-shuffle
+
+* Daniel Hug JavaScript Stopwatch was adopted for use in this memogry game project. Daniel's JavaScript Stopwatch can be found here: https://jsfiddle.net/Daniel_Hug/pvk6p/
+
 ## Game URL
 https://bviengineer.github.io/fend-project-memory-game/
+
+
